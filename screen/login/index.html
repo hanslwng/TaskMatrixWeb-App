@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/TaskMatrixMain/screen/images/tasklogo.png">
+    <title>TaskMatrix</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="style1.css">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <style>
+        .modal {
+            display: none;
+            position: fixed;    
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .close-modal {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .error-message {
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
+
+        .verification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .verification-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .verification-content {
+            background-color: white;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .robot-message {
+            background: linear-gradient(135deg, #4BB6B7, #3a9293);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .verification-step h3 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .verification-step p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .image-option {
+            position: relative;
+            aspect-ratio: 1;
+            cursor: pointer;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .emoji {
+            font-size: 2.5em;
+            transition: all 0.3s ease;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .image-option:hover {
+            transform: translateY(-5px);
+            border-color: #4BB6B7;
+            box-shadow: 0 6px 15px rgba(75, 182, 183, 0.3);
+        }
+
+        .image-option:hover .emoji {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* Hide checkmark by default and show only after verification */
+        .image-option.selected::after {
+            display: none;
+        }
+
+        .image-option.verified.selected::after {
+            display: flex;
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(75, 182, 183, 0.9);
+            color: white;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: checkmark 0.3s ease forwards;
+        }
+
+        /* Style the verify button */
+        #verifyButton {
+            background: linear-gradient(135deg, #4BB6B7, #3a9293);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(75, 182, 183, 0.2);
+        }
+
+        #verifyButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(75, 182, 183, 0.3);
+        }
+
+        /* Remove loading styles since we're using emojis */
+        .image-option.loading::before {
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4BB6B7, #3a9293);
+            width: 0;
+            transition: width 0.5s ease;
+            border-radius: 20px;
+        }
+
+        /* Step notification */
+        .step-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #4BB6B7;
+            color: white;
+            border-radius: 5px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1100;
+        }
+
+        .step-notification.show {
+            transform: translateX(0);
+        }
+
+        /* Robot verification message */
+        .robot-message {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .robot-message i {
+            font-size: 24px;
+            color: #4BB6B7;
+        }
+
+        .verification-step {
+            display: none;  /* Hide all steps by default */
+        }
+
+        .verification-step.active {
+            display: block;  /* Only show active step */
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #forgotPasswordModal .modal-content {
+            max-width: 400px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-effect {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.9),
+                rgba(255, 255, 255, 0.7)
+            );
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        #forgotPasswordModal .modal-header {
+            background: linear-gradient(135deg, #4BB6B7, #3a9293);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        #forgotPasswordModal .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        #forgotPasswordModal .modal-body {
+            padding: 2rem;
+        }
+
+        .reset-icon {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .reset-icon i {
+            font-size: 3rem;
+            color: #4BB6B7;
+            background: rgba(75, 182, 183, 0.1);
+            padding: 1rem;
+            border-radius: 50%;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4BB6B7;
+        }
+
+        #forgotPasswordModal input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 2px solid rgba(75, 182, 183, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #forgotPasswordModal input:focus {
+            border-color: #4BB6B7;
+            box-shadow: 0 0 0 3px rgba(75, 182, 183, 0.1);
+            outline: none;
+        }
+
+        #forgotPasswordModal .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        #forgotPasswordModal .cancel-btn,
+        #forgotPasswordModal .primary-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        #forgotPasswordModal .cancel-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        #forgotPasswordModal .primary-btn {
+            background: linear-gradient(135deg, #4BB6B7, #3a9293);
+            color: white;
+        }
+
+        #forgotPasswordModal .cancel-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: translateY(-2px);
+        }
+
+        #forgotPasswordModal .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(75, 182, 183, 0.2);
+        }
+
+        #forgotPasswordModal .close-modal {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        #forgotPasswordModal .close-modal:hover {
+            opacity: 1;
+        }
+
+        /* Add this to your existing styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #4BB6B7;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification i {
+            font-size: 20px;
+        }
+
+        .notification.success i {
+            color: #4BB6B7;
+        }
+
+        .notification.error i {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- Registration Form Section -->
+        <div class="form-container register-container">
+            <form id="registerForm">
+                <input type="hidden" name="action" value="register">
+                <h1>Register Here</h1>
+                <input type="text" name="name" placeholder="Name" aria-label="Name" required>
+                <input type="email" name="email" placeholder="Email" aria-label="Email" required>
+                <input type="password" name="password" placeholder="Password" aria-label="Password" required>
+                
+                <button type="submit">Register</button>
+                
+                <span>or use your social account</span>
+                <div class="social-container">
+                    <a href="#" class="social" aria-label="Facebook"><i class="lni lni-facebook-fill"></i></a>
+                    <a href="#" class="social" aria-label="Google"><i class="lni lni-google"></i></a>
+                    <a href="#" class="social" aria-label="LinkedIn"><i class="lni lni-linkedin-original"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Login Form Section -->
+        <div class="form-container login-container">
+            <form id="loginForm">
+                <input type="hidden" name="action" value="login">
+                <h1>Login Here</h1>
+                <input type="email" name="email" placeholder="Email" aria-label="Email" required>
+                <input type="password" name="password" placeholder="Password" aria-label="Password" required>
+                
+                <div class="content">
+                    <div class="checkbox">
+                        <input type="checkbox" name="remember" id="checkbox">
+                        <label for="checkbox">Remember me</label>
+                    </div>
+                    <div class="pass-link">
+                        <a href="#" onclick="showForgotPasswordModal(event)">Forgot password?</a>
+                    </div>
+                </div>
+                
+                <button type="submit">Login</button>
+                
+                <span>or use your social account</span>
+                <div class="social-container">
+                    <a href="#" class="social" aria-label="Facebook"><i class="lni lni-facebook-fill"></i></a>
+                    <a href="#" class="social" aria-label="Google"><i class="lni lni-google"></i></a>
+                    <a href="#" class="social" aria-label="GitHub"><i class="lni lni-github-original"></i></a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Overlay Section -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel">
+                    <h1 class="title">Hello  friends</h1>
+                    <p>If you have an account, login here and have fun</p>
+                    <button class="ghost" id="login" type="button">
+                        Login
+                        <i class="lni lni-arrow-left login"></i>
+                    </button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1 class="title">Task Matrix</h1>
+                    <p>If you don't have an account yet, join us and start your journey.</p>
+                    <button class="ghost" id="register" type="button">
+                        Register
+                        <i class="lni lni-arrow-right register"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="errorModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Notification</h3>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+    <div id="verificationModal" class="verification-modal">
+        <div class="verification-content">
+            <div class="robot-message">
+                <i class="lni lni-shield"></i>
+                <span>Please verify that you're not a robot</span>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <!-- Step 1: Cars -->
+            <div class="verification-step active" data-step="1">
+                <h3>Verification Step 1</h3>
+                <p>Please select all <span class="target-object">cars</span></p>
+                <div class="image-grid">
+                    <div class="image-option" data-type="car">
+                        <div class="emoji">🚗</div>
+                    </div>
+                    <div class="image-option" data-type="building">
+                        <div class="emoji">🏢</div>
+                    </div>
+                    <div class="image-option" data-type="car">
+                        <div class="emoji">🚙</div>
+                    </div>
+                    <div class="image-option" data-type="tree">
+                        <div class="emoji">🌳</div>
+                    </div>
+                    <div class="image-option" data-type="car">
+                        <div class="emoji">🏎️</div>
+                    </div>
+                    <div class="image-option" data-type="building">
+                        <div class="emoji">🏛️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Traffic Lights -->
+            <div class="verification-step" data-step="2">
+                <h3>Verification Step 2</h3>
+                <p>Please select all <span class="target-object">traffic lights</span></p>
+                <div class="image-grid">
+                    <div class="image-option" data-type="traffic">
+                        <div class="emoji">🚦</div>
+                    </div>
+                    <div class="image-option" data-type="building">
+                        <div class="emoji">🏢</div>
+                    </div>
+                    <div class="image-option" data-type="traffic">
+                        <div class="emoji">🚥</div>
+                    </div>
+                    <div class="image-option" data-type="sign">
+                        <div class="emoji">🚸</div>
+                    </div>
+                    <div class="image-option" data-type="traffic">
+                        <div class="emoji">🚦</div>
+                    </div>
+                    <div class="image-option" data-type="pole">
+                        <div class="emoji">🏗️</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Bicycles -->
+            <div class="verification-step" data-step="3">
+                <h3>Verification Step 3</h3>
+                <p>Please select all <span class="target-object">bicycles</span></p>
+                <div class="image-grid">
+                    <div class="image-option" data-type="bike">
+                        <div class="emoji">🚲</div>
+                    </div>
+                    <div class="image-option" data-type="car">
+                        <div class="emoji">🚓</div>
+                    </div>
+                    <div class="image-option" data-type="bike">
+                        <div class="emoji">🚴</div>
+                    </div>
+                    <div class="image-option" data-type="building">
+                        <div class="emoji">🏭</div>
+                    </div>
+                    <div class="image-option" data-type="bike">
+                        <div class="emoji">🚵</div>
+                    </div>
+                    <div class="image-option" data-type="tree">
+                        <div class="emoji">🌲</div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="verifyButton">Verify</button>
+        </div>
+    </div>
+    <div class="step-notification" id="stepNotification">
+        Great job! Keep going!
+    </div>
+    <div class="about-icon">
+        <button class="about-btn">
+            <i class="lni lni-information"></i>
+        </button>
+    </div>
+
+    <!-- About Modal -->
+    <div class="about-modal">
+        <div class="about-modal-content">
+            <span class="close-about">&times;</span>
+            <div class="about-header">
+                <h2>About TaskMatrix</h2>
+                <div class="shine-line"></div>
+            </div>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <i class="lni lni-consulting"></i>
+                    <h3>AI Assistant</h3>
+                    <p>Smart AI helper for task management and academic support</p>
+                </div>
+
+                <div class="feature-item">
+                    <i class="lni lni-calendar"></i>
+                    <h3>Task Organization</h3>
+                    <p>Efficient task scheduling with smart reminders</p>
+                </div>
+
+                <div class="feature-item">
+                    <i class="lni lni-graduation"></i>
+                    <h3>Course Manager</h3>
+                    <p>Organize your courses and academic schedules</p>
+                </div>
+
+                <div class="feature-item">
+                    <i class="lni lni-list"></i>
+                    <h3>To-Do List</h3>
+                    <p>Keep track of your tasks and to-dos efficiently</p>
+                </div>
+
+                <div class="feature-item">
+                    <i class="lni lni-game"></i>
+                    <h3>Dino Game</h3>
+                    <p>Take a break with our relaxing Chrome-inspired Dino runner game</p>
+                </div>
+
+                <div class="feature-item">
+                    <i class="lni lni-envelope"></i>
+                    <h3>Email Reminders</h3>
+                    <p>Never miss important deadlines with email alerts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Forgot Password</h2>
+                <span class="close-modal" onclick="closeForgotPasswordModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="reset-icon">
+                    <i class="lni lni-lock"></i>
+                </div>
+                <form id="forgotPasswordForm">
+                    <div class="input-wrapper">
+                        <i class="lni lni-envelope"></i>
+                        <input type="email" id="resetEmail" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="cancel-btn" onclick="closeForgotPasswordModal()">
+                            <i class="lni lni-close"></i>
+                            Cancel
+                        </button>
+                        <button type="submit" class="primary-btn">
+                            <i class="lni lni-envelope"></i>
+                            Send Reset Link
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            let currentStep = 1;
+            const totalSteps = 3;
+            let failedAttempts = 0;
+            const maxAttempts = 2;
+
+            // Hide all steps except first one on initial load
+            $('.verification-step').not('[data-step="1"]').hide();
+
+            function shuffleGrid(stepElement) {
+                const grid = stepElement.find('.image-grid');
+                const options = grid.children().toArray();
+                
+                // Fisher-Yates shuffle algorithm
+                for (let i = options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    grid.append(options[j]);
+                    options[j] = options[i];
+                }
+            }
+
+            function updateVerificationStep() {
+                $('.verification-step').removeClass('active').hide();
+                const nextStep = $(`.verification-step[data-step="${currentStep}"]`);
+                nextStep.addClass('active').show();
+                
+                // Shuffle the grid of the next step
+                shuffleGrid(nextStep);
+                
+                // Update progress bar
+                const progress = ((currentStep - 1) / totalSteps) * 100;
+                $('#progressBar').css('width', progress + '%');
+                
+                // Reset selections for new step
+                $('.image-option').removeClass('selected');
+            }
+
+            // Handle verification button click
+            $('#verifyButton').click(function() {
+                let correctSelections = true;
+                const currentStepElement = $(`.verification-step[data-step="${currentStep}"]`);
+                const targetType = currentStep === 1 ? 'car' : 
+                                  currentStep === 2 ? 'traffic' : 'bike';
+
+                currentStepElement.find('.image-option').each(function() {
+                    const isSelected = $(this).hasClass('selected');
+                    const isCorrectType = $(this).data('type') === targetType;
+                    
+                    if ((isCorrectType && !isSelected) || (!isCorrectType && isSelected)) {
+                        correctSelections = false;
+                    }
+                });
+
+                // Add verified class to show checkmarks
+                currentStepElement.find('.image-option').addClass('verified');
+
+                if (correctSelections) {
+                    setTimeout(() => {
+                        if (currentStep < totalSteps) {
+                            const messages = [
+                                "Great job! Two more to go!",
+                                "Almost there! One final step!"
+                            ];
+                            showStepNotification(messages[currentStep - 1]);
+                            currentStep++;
+                            updateVerificationStep();
+                        } else {
+                            showStepNotification("Verification complete!");
+                            hideVerificationModal();
+                            submitRegistration();
+                        }
+                    }, 1000); // Delay to show checkmarks
+                } else {
+                    failedAttempts++;
+                    setTimeout(() => {
+                        if (failedAttempts >= maxAttempts) {
+                            showStepNotification("Too many failed attempts");
+                            hideVerificationModal();
+                            currentStep = 1;
+                            failedAttempts = 0;
+                        } else {
+                            showModal(`Incorrect selection. You have ${maxAttempts - failedAttempts} attempts remaining.`);
+                            $('.image-option').removeClass('verified selected');
+                        }
+                    }, 1000); // Delay to show incorrect selections
+                }
+            });
+
+            // Reset everything when showing modal
+            $('#registerForm').submit(function(e) {
+                e.preventDefault();
+                currentStep = 1;
+                failedAttempts = 0;
+                
+                // Shuffle all steps before showing the first one
+                $('.verification-step').each(function() {
+                    shuffleGrid($(this));
+                });
+                
+                updateVerificationStep();
+                $('#progressBar').css('width', '0%');
+                $('#verificationModal').addClass('show');
+            });
+
+            function hideVerificationModal() {
+                $('#verificationModal').removeClass('show');
+                currentStep = 1;
+                failedAttempts = 0;
+                $('.image-option').removeClass('selected verified');
+                $('.verification-step').removeClass('active').hide();
+                $('.verification-step[data-step="1"]').addClass('active').show();
+            }
+
+            // Add loading state to images
+            $('.image-option').addClass('loading');
+            $('.image-option img').each(function() {
+                $(this).on('load', function() {
+                    $(this).parent().removeClass('loading');
+                });
+            });
+
+            // Show step notification
+            function showStepNotification(message) {
+                $('#stepNotification').text(message).addClass('show');
+                setTimeout(() => {
+                    $('#stepNotification').removeClass('show');
+                }, 2000);
+            }
+
+            // Registration Form Handler
+            $('#registerForm').submit(function(e) {
+                e.preventDefault();
+                currentStep = 1;
+                failedAttempts = 0;
+                
+                // Shuffle all steps before showing the first one
+                $('.verification-step').each(function() {
+                    shuffleGrid($(this));
+                });
+                
+                updateVerificationStep();
+                $('#progressBar').css('width', '0%');
+                $('#verificationModal').addClass('show');
+            });
+
+            function submitRegistration() {
+                var formData = $('#registerForm').serialize();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: 'register.php',
+                    data: formData,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            showModal('Registration successful! Redirecting to login...');
+                            setTimeout(function() {
+                                document.getElementById('login').click();
+                            }, 2000);
+                        } else {
+                            showModal(response.message);
+                        }
+                    },
+                    error: function() {
+                        showModal('An error occurred. Please try again.');
+                    }
+                });
+            }
+
+            // Close verification modal when clicking outside
+            $(window).click(function(e) {
+                if ($(e.target).hasClass('verification-modal')) {
+                    hideVerificationModal();
+                }
+            });
+
+            // Modal functions
+            function showModal(message) {
+                $('#errorMessage').text(message);
+                $('#errorModal').fadeIn();
+            }
+
+            $('.close-modal').click(function() {
+                $('#errorModal').fadeOut();
+            });
+
+            $(window).click(function(e) {
+                if ($(e.target).hasClass('modal')) {
+                    $('.modal').fadeOut();
+                }
+            });
+
+            // Handle image selection with click event
+            $(document).on('click', '.image-option', function() {
+                if (!$(this).hasClass('verified')) {  // Only allow selection if not verified
+                    $(this).toggleClass('selected');
+                }
+            });
+        });
+
+        // About Modal Functionality
+        const aboutBtn = document.querySelector('.about-btn');
+        const aboutModal = document.querySelector('.about-modal');
+        const closeAbout = document.querySelector('.close-about');
+
+        aboutBtn.addEventListener('click', () => {
+            aboutModal.style.display = 'block';
+        });
+
+        closeAbout.addEventListener('click', () => {
+            aboutModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === aboutModal) {
+                aboutModal.style.display = 'none';
+            }
+        });
+
+        function showForgotPasswordModal(event) {
+            event.preventDefault();
+            document.getElementById('forgotPasswordModal').style.display = 'block';
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (event.target === modal) {
+                closeForgotPasswordModal();
+            }
+        });
+
+        // Handle forgot password form submission
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            
+            // Show loading state
+            const submitBtn = this.querySelector('.primary-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="lni lni-spinner-arrow"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            fetch('reset_password.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showModal(data.message);
+                    closeForgotPasswordModal();
+                } else {
+                    showModal('An error occurred. Please try again.');
+                }
+            })
+            .catch(error => {
+                showModal('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+    <!-- Scripts -->
+    <script src="auth.js"></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

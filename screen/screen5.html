@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/loading.css">
+    <link rel="icon" type="image/png" href="/TaskMatrixMain/screen/images/tasklogo.png">
+    <title>TaskMatrix</title>
+</head>
+    <style>
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 1001;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-buttons .cancel {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .modal-buttons .logout {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-buttons button:hover {
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        .game-container {
+            padding: 20px;
+            text-align: center;
+            width: 1000px;
+            margin: 0 20px;
+            display: inline-block;
+        }
+
+        .theme-selector {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .theme-btn-wrapper {
+            width: 140px;
+            height: 50px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-btn-front {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            background-size: 200% auto;
+        }
+
+        /* Modern Gradient Themes */
+        .theme-btn-wrapper[data-theme="classic"] .theme-btn-front {
+            background-image: linear-gradient(
+                135deg, 
+                #2193b0 0%, 
+                #6dd5ed 50%, 
+                #2193b0 100%
+            );
+            box-shadow: 0 4px 15px rgba(33, 147, 176, 0.3);
+        }
+
+        .theme-btn-wrapper[data-theme="neon"] .theme-btn-front {
+            background-image: linear-gradient(
+                135deg, 
+                #ff00ff 0%, 
+                #00ffff 50%, 
+                #ff00ff 100%
+            );
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.3);
+        }
+
+        .theme-btn-wrapper[data-theme="desert"] .theme-btn-front {
+            background-image: linear-gradient(
+                135deg, 
+                #ff8c00 0%, 
+                #ff0080 50%, 
+                #ff8c00 100%
+            );
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .theme-btn-wrapper[data-theme="space"] .theme-btn-front {
+            background-image: linear-gradient(
+                135deg, 
+                #1e3c72 0%, 
+                #2a5298 50%, 
+                #1e3c72 100%
+            );
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        /* Hide back side */
+        .theme-btn-back {
+            display: none;
+        }
+
+        /* Shine Effect */
+        .theme-btn-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+
+        /* Hover Effects */
+        .theme-btn-wrapper:hover .theme-btn-front {
+            background-position: right center;
+            transform: translateY(-2px);
+        }
+
+        .theme-btn-wrapper:hover .theme-btn-front::before {
+            animation: shine 0.75s;
+        }
+
+        .theme-btn-wrapper:active .theme-btn-front {
+            transform: translateY(1px);
+        }
+
+        /* Active State */
+        .theme-btn-wrapper.active .theme-btn-front {
+            filter: brightness(1.1);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Shine Animation */
+        @keyframes shine {
+            100% {
+                left: 125%;
+            }
+        }
+
+        /* Hover Glow Effects */
+        .theme-btn-wrapper[data-theme="classic"]:hover .theme-btn-front {
+            box-shadow: 0 8px 25px rgba(33, 147, 176, 0.5);
+        }
+
+        .theme-btn-wrapper[data-theme="neon"]:hover .theme-btn-front {
+            box-shadow: 0 8px 25px rgba(255, 0, 255, 0.5);
+        }
+
+        .theme-btn-wrapper[data-theme="desert"]:hover .theme-btn-front {
+            box-shadow: 0 8px 25px rgba(255, 140, 0, 0.5);
+        }
+
+        .theme-btn-wrapper[data-theme="space"]:hover .theme-btn-front {
+            box-shadow: 0 8px 25px rgba(30, 60, 114, 0.5);
+        }
+
+        /* Pulse Animation for Active Button */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .theme-btn-wrapper.active {
+            animation: pulse 2s infinite;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        #game {
+            width: 900px;
+            height: 450px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: #f7f7f7;
+            transition: all 0.3s;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        #dino {
+            position: absolute;
+            left: 50px;
+            bottom: 0;
+            width: 60px;
+            height: 80px;
+            transition: transform 0.1s;
+            z-index: 100;
+        }
+
+        /* Animation States */
+        #dino.running .dino-leg.left {
+            animation: run-left 0.4s infinite;
+        }
+
+        #dino.running .dino-leg.right {
+            animation: run-right 0.4s infinite;
+        }
+
+        #dino.jumping {
+            animation: jump-motion 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #dino.ducking {
+            transform: scale(1, 0.5) translateY(40px);
+        }
+
+        /* Running Animation */
+        @keyframes run-left {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes run-right {
+            0%, 100% { transform: translateY(-10px); }
+            50% { transform: translateY(0); }
+        }
+
+        /* Jump Animation */
+        @keyframes jump-motion {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-20deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .dino-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* T-Rex Head */
+        .dino-head {
+            position: absolute;
+            width: 35px;
+            height: 30px;
+            background: #2d3436;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 40% 60% 20% 40%;
+            clip-path: polygon(0 20%, 100% 20%, 100% 100%, 0 100%);
+        }
+
+        /* Jaw */
+        .dino-jaw {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            background: #2d3436;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 30% 40% 60% 40%;
+        }
+
+        /* Eye */
+        .dino-eye {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 25%;
+            right: 25%;
+        }
+
+        .dino-eye::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #2d3436;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Body */
+        .dino-torso {
+            position: absolute;
+            width: 45px;
+            height: 40px;
+            background: #2d3436;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 30% 40% 20% 40%;
+        }
+
+        /* Arms */
+        .dino-arm {
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background: #2d3436;
+            top: 30px;
+        }
+
+        .dino-arm.left {
+            left: 10px;
+            transform: rotate(15deg);
+        }
+
+        .dino-arm.right {
+            right: 10px;
+            transform: rotate(-15deg);
+        }
+
+        /* Legs */
+        .dino-leg {
+            position: absolute;
+            width: 15px;
+            height: 30px;
+            background: #2d3436;
+            bottom: 0;
+        }
+
+        .dino-leg.left {
+            left: 15px;
+        }
+
+        .dino-leg.right {
+            right: 15px;
+        }
+
+        /* Tail */
+        .dino-tail {
+            position: absolute;
+            width: 40px;
+            height: 12px;
+            background: #2d3436;
+            bottom: 25px;
+            right: -25px;
+            transform: rotate(-5deg);
+            border-radius: 0 40% 40% 0;
+        }
+
+        .obstacles {
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            gap: 300px;
+        }
+
+        .obstacle {
+            width: 22px;
+            height: 45px;
+            background: currentColor;
+            position: absolute;
+            bottom: 20px;
+            border-radius: 3px;
+        }
+
+        .clouds {
+            position: absolute;
+            top: 20%;
+            width: 100%;
+            z-index: 0;
+        }
+
+        .cloud {
+            width: 60px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            position: absolute;
+            animation: cloudMove linear infinite;
+        }
+
+        /* Themes */
+        #game.neon {
+            background: #000;
+            border: 3px solid #0ff;
+            box-shadow: 0 0 20px #0ff;
+        }
+
+        #game.neon #dino,
+        #game.neon .obstacle {
+            color: #0ff;
+            filter: drop-shadow(0 0 5px #0ff);
+        }
+
+        #game.desert {
+            background: linear-gradient(to bottom, #ffd700, #ff8c00);
+            background-size: 200% 200%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        #game.desert #dino,
+        #game.desert .obstacle {
+            color: #8b4513;
+        }
+
+        #game.space {
+            background: #000;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 800px 800px, 600px 600px, 400px 400px;
+            animation: space-move 40s linear infinite;
+        }
+
+        #game.space #dino,
+        #game.space .obstacle {
+            color: #fff;
+        }
+
+        /* Animations */
+        @keyframes cloudMove {
+            from { right: -100px; }
+            to { right: 100%; }
+        }
+
+        @keyframes space-move {
+            from { background-position: 0 0; }
+            to { background-position: 550px 550px; }
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particle-fade 1s ease-out forwards;
+        }
+
+        @keyframes particle-fade {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-50px) scale(0); opacity: 0; }
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 1440px) {
+            #game {
+                width: 1400px;
+                height: 600px;
+            }
+            
+            .game-stats {
+                font-size: 2rem;
+            }
+        }
+
+        /* Theme-specific backgrounds for larger screen */
+        #game.neon {
+            background: #000;
+            border: 4px solid #0ff;
+            box-shadow: 0 0 30px #0ff;
+        }
+
+        #game.desert {
+            background: linear-gradient(to bottom, #ffd700, #ff8c00);
+            background-size: 200% 200%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        #game.space {
+            background: #000;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+            background-size: 1100px 1100px, 700px 700px, 500px 500px;
+            animation: space-move 60s linear infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Adjust controls for bigger screen */
+        .game-controls {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .game-controls button {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        /* Modal adjustments for bigger screen */
+        .modal-content {
+            max-width: 800px;
+            padding: 3rem;
+        }
+
+        .modal h2 {
+            font-size: 2.5rem;
+        }
+
+        .info-content {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 850px) {
+            #game {
+                width: 95%;
+                height: 350px;
+            }
+            
+            .game-stats {
+                font-size: 1rem;
+            }
+        }
+
+        /* Adjust controls for moderate size */
+        .game-controls {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .game-controls button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            margin-top: 0.75rem;
+        }
+
+        /* Adjusted smaller game container and screen size */
+        .game-container {
+            padding: 15px;
+            text-align: center;
+            width: 600px;
+            margin: 0;
+            display: inline-block;
+        }
+
+        #game {
+            width: 550px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: #f7f7f7;
+            transition: all 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Adjust game stats for smaller size */
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        /* Adjust runner size */
+        #dino {
+            width: 40px;
+            height: 60px;
+            position: absolute;
+            bottom: 10px;
+            left: 40px;
+        }
+
+        /* Adjust obstacles */
+        .obstacle {
+            width: 15px;
+            height: 30px;
+            position: absolute;
+            bottom: 10px;
+        }
+
+        /* Theme backgrounds adjusted for smaller size */
+        #game.space {
+            background-size: 400px 400px, 250px 250px, 150px 150px;
+        }
+
+        /* Adjust controls for smaller size */
+        .game-controls {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .game-controls button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+
+        /* Modal adjustments for smaller game size */
+        .modal-content {
+            max-width: 500px;
+            padding: 1.5rem;
+        }
+
+        .modal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-content {
+            font-size: 0.9rem;
+        }
+
+        /* Much bigger game container */
+        main {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .game-container {
+            width: calc(100% - 40px); /* Take full available width minus padding */
+            max-width: 1200px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #game {
+            width: 100%;  /* Full width of container */
+            height: 550px; /* Much taller game area */
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: #f7f7f7;
+            transition: all 0.3s;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Larger game stats display */
+        .game-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Bigger runner size */
+        #dino {
+            width: 65px;
+            height: 100px;
+            position: absolute;
+            bottom: 25px;
+            left: 80px;
+        }
+
+        /* Bigger obstacles */
+        .obstacle {
+            width: 30px;
+            height: 60px;
+            position: absolute;
+            bottom: 25px;
+        }
+
+        /* Larger theme buttons */
+        .theme-selector {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .theme-btn {
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        /* Larger game controls */
+        .game-controls {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+        }
+
+        .game-controls button {
+            padding: 1rem 2.5rem;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            border-radius: 12px;
+        }
+
+        /* Loading Modal styles remain unchanged */
+        .loading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loading-modal.active {
+            display: flex;
+        }
+
+        /* Dino Character Styling */
+        #dino {
+            position: absolute;
+            left: 50px;
+            bottom: 0;
+            width: 60px;
+            height: 80px;
+            z-index: 100;
+        }
+
+        .runner-body {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Head */
+        .head {
+            position: absolute;
+            width: 35px;
+            height: 30px;
+            background: currentColor;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 40% 60% 20% 40%;
+        }
+
+        /* Torso */
+        .torso {
+            position: absolute;
+            width: 45px;
+            height: 40px;
+            background: currentColor;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 30% 40% 20% 40%;
+        }
+
+        /* Arms */
+        .arm-left, .arm-right {
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background: currentColor;
+            top: 30px;
+        }
+
+        .arm-left {
+            left: 10px;
+            transform-origin: top center;
+            transform: rotate(15deg);
+        }
+
+        .arm-right {
+            right: 10px;
+            transform-origin: top center;
+            transform: rotate(-15deg);
+        }
+
+        /* Legs */
+        .leg-left, .leg-right {
+            position: absolute;
+            width: 15px;
+            height: 30px;
+            background: currentColor;
+            bottom: 0;
+        }
+
+        .leg-left {
+            left: 15px;
+            transform-origin: top center;
+        }
+
+        .leg-right {
+            right: 15px;
+            transform-origin: top center;
+        }
+
+        /* Theme Colors */
+        #game.classic #dino {
+            color: #535353;
+        }
+
+        #game.neon #dino {
+            color: #0ff;
+            filter: drop-shadow(0 0 5px #0ff);
+        }
+
+        #game.desert #dino {
+            color: #8b4513;
+        }
+
+        #game.space #dino {
+            color: #fff;
+            filter: drop-shadow(0 0 3px #fff);
+        }
+
+        /* Animations */
+        #dino.running .leg-left {
+            animation: run-left 0.4s infinite;
+        }
+
+        #dino.running .leg-right {
+            animation: run-right 0.4s infinite;
+        }
+
+        #dino.jumping {
+            animation: jump-motion 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #dino.ducking {
+            transform: scaleY(0.5) translateY(40px);
+        }
+
+        /* Running Animation */
+        @keyframes run-left {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-10px) rotate(15deg); }
+        }
+
+        @keyframes run-right {
+            0%, 100% { transform: translateY(-10px) rotate(-15deg); }
+            50% { transform: translateY(0) rotate(0); }
+        }
+
+        /* Jump Animation */
+        @keyframes jump-motion {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-20deg); }
+            100% { transform: rotate(0deg); }
+        }
+    </style>
+    
+<body>
+
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/tasklogo.png">
+                    <h2>Task<span class="primary">Matrix</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="screen1.html">
+                    <span class="material-icons-sharp">
+                        dashboard
+                    </span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="screen2.html">
+                    <span class="material-icons-sharp">
+                        phone_android
+                    </span>
+                    <h3>Android</h3>
+                </a>
+                <a href="screen3.html">
+                    <span class="material-icons-sharp">
+                        subject
+                    </span>
+                    <h3>My Course</h3>
+                </a>
+                <a href="screen4.html">
+                    <span class="material-icons-sharp">
+                        event_available
+                    </span>
+                    <h3>Calendar</h3>
+                </a>
+                <a href="screen5.html" class="active">
+                    <span class="material-icons-sharp">
+                        sports_esports
+                    </span>
+                    <h3>Dino Game</h3>
+                    <span class="message-count">27</span>
+                </a>
+                <a href="screen6.html">
+                    <span class="material-icons-sharp">
+                        inventory
+                    </span>
+                    <h3>To do List</h3>
+                </a>
+                <a href="screen7.html">
+                    <span class="material-icons-sharp">record_voice_over</span>
+                    <h3>Speech to Text Converter</h3>
+                </a>
+                <a href="screen8.html">
+                    <span class="material-icons-sharp">help</span>
+                    <h3>Help</h3>
+                </a>
+                <a href="#" onclick="showLogoutModal(event)">
+                    <span class="material-icons-sharp">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            <div class="game-container">
+                <div class="theme-selector">
+                    <div class="theme-btn-wrapper" data-theme="classic">
+                        <div class="theme-btn-front">Classic</div>
+                        <div class="theme-btn-back">Classic</div>
+                    </div>
+                    <div class="theme-btn-wrapper" data-theme="neon">
+                        <div class="theme-btn-front">Neon</div>
+                        <div class="theme-btn-back">Neon</div>
+                    </div>
+                    <div class="theme-btn-wrapper" data-theme="desert">
+                        <div class="theme-btn-front">Desert</div>
+                        <div class="theme-btn-back">Desert</div>
+                    </div>
+                    <div class="theme-btn-wrapper" data-theme="space">
+                        <div class="theme-btn-front">Space</div>
+                        <div class="theme-btn-back">Space</div>
+                    </div>
+                </div>
+                <div class="game-stats">
+                    <div id="score">Score: 0</div>
+                    <div id="highScore">High Score: 0</div>
+                    <div id="speed">Speed: 1x</div>
+                </div>
+                <div id="game">
+                    <div id="particles"></div>
+                    <div id="dino">
+                        <div class="dino-body">
+                            <div class="dino-head">
+                                <div class="dino-eye"></div>
+                                <div class="dino-jaw"></div>
+                            </div>
+                            <div class="dino-torso"></div>
+                            <div class="dino-arm left"></div>
+                            <div class="dino-arm right"></div>
+                            <div class="dino-leg left"></div>
+                            <div class="dino-leg right"></div>
+                            <div class="dino-tail"></div>
+                        </div>
+                    </div>
+                    <div id="obstacles"></div>
+                    <div id="ground">
+                        <div class="ground-line"></div>
+                    </div>
+                    <div class="clouds">
+                        <div class="cloud"></div>
+                        <div class="cloud"></div>
+                    </div>
+                </div>
+                <div class="game-controls">
+                    <p>Press SPACE to jump | Press DOWN to duck</p>
+                    <button id="startGame">Start Game</button>
+                </div>
+            </div>
+            
+        </main>
+            
+        <!-- End of Main Content -->
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">
+                        menu
+                    </span>
+                </button>
+                <div class="dark-mode">
+                    <span class="material-icons-sharp active">
+                        light_mode
+                    </span>
+                    <span class="material-icons-sharp">
+                        dark_mode
+                    </span>
+                </div>
+
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Guest</b></p>
+                        <small class="text-muted">User</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="images/default.png">
+                    </div>
+                </div>
+
+            </div>
+            <!-- End of Nav -->
+
+           
+            <div class="system-connect"></div>
+            <div class="header">
+                <div class="logo-section">
+                    
+                </div>
+            </div>
+
+            <!-- Default View -->
+            <div id="defaultView">
+                <div class="info-cards">
+                    <!-- System Overview Card -->
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <span class="material-icons-sharp">rocket_launch</span>
+                        </div>
+                        <h3>Smart Task Management</h3>
+                        <p>TaskMatrix revolutionizes your productivity with AI-powered task organization, intelligent scheduling, and seamless course management.</p>
+                        <div class="shine-effect"></div>
+                    </div>
+
+                    <!-- Features Card -->
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <span class="material-icons-sharp">stars</span>
+                        </div>
+                        <h3>Key Features</h3>
+                        <ul class="feature-list">
+                            <li><span class="material-icons-sharp">check_circle</span>Smart Course Tracking</li>
+                            <li><span class="material-icons-sharp">check_circle</span>Interactive Calendar</li>
+                            <li><span class="material-icons-sharp">check_circle</span>Real-time Updates</li>
+                            <li><span class="material-icons-sharp">check_circle</span>Progress Analytics</li>
+                        </ul>
+                        <div class="shine-effect"></div>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3 id="connectWithUsBtn" style="cursor: pointer;">Connect With Us</h3>
+                </div>
+            </div>
+
+            <!-- Contact View (Initially Hidden) -->
+            <div id="contactView" style="display: none;">
+                <button id="backBtn" class="back-button">
+                    <span class="material-icons-sharp">arrow_back</span>
+                    Back
+                </button>
+                
+                <div class="contact-cards">
+                    <a href="https://facebook.com/yourusername" class="contact-card facebook" target="_blank">
+                        <div class="icon-container">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>Facebook</h4>
+                            <p>Follow our updates</p>
+                        </div>
+                        <span class="material-icons-sharp arrow">arrow_forward</span>
+                        <div class="hover-effect"></div>
+                    </a>
+
+                    <a href="https://github.com/yourusername" class="contact-card github" target="_blank">
+                        <div class="icon-container">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>GitHub</h4>
+                            <p>View our code</p>
+                        </div>
+                        <span class="material-icons-sharp arrow">arrow_forward</span>
+                        <div class="hover-effect"></div>
+                    </a>
+
+                    <a href="mailto:your.email@gmail.com" class="contact-card gmail" target="_blank">
+                        <div class="icon-container">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>Email Us</h4>
+                            <p>Get support</p>
+                        </div>
+                        <span class="material-icons-sharp arrow">arrow_forward</span>
+                        <div class="hover-effect"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            background: #2563eb;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-icon .material-icons-sharp {
+            color: #ffffff !important;
+            font-size: 24px;
+        }
+
+        [data-theme="dark"] .card-icon .material-icons-sharp {
+            color: #ffffff !important;
+        }
+
+        .info-card:hover .card-icon {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: #4b5563;
+        }
+
+        .feature-list span {
+            color: #2563eb;
+            font-size: 18px;
+        }
+
+        .contact-section {
+            margin-top: 3rem;
+        }
+
+        .contact-section h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+        }
+
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: #ffffff;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .icon-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            z-index: 1;
+        }
+
+        .contact-info {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .contact-info h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .contact-info p {
+            margin: 0.3rem 0 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .arrow {
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .hover-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2563eb;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-card:hover {
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .contact-card:hover .hover-effect {
+            opacity: 1;
+        }
+
+        .contact-card:hover .arrow {
+            opacity: 1;
+            color: white;
+        }
+
+        .contact-card:hover .contact-info p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .shine-effect {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @media screen and (max-width: 768px) {
+            .system-connect {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .contact-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Add these new styles */
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: #2563eb;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+        }
+
+        #defaultView, #contactView {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        .fade-in {
+            opacity: 1 !important;
+        }
+
+        /* Add these dark mode styles */
+        [data-theme="dark"] .system-connect {
+            background: #1a1a1a;
+        }
+
+        [data-theme="dark"] .info-card {
+            background: #242424;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .info-card:hover {
+            background: #2d2d2d;
+        }
+
+        [data-theme="dark"] .info-card h3,
+        [data-theme="dark"] .contact-card h4 {
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .info-card p,
+        [data-theme="dark"] .contact-card p {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .feature-list li {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .feature-list .material-icons-sharp {
+            color: #2563eb;
+        }
+
+        [data-theme="dark"] .contact-card {
+            background: #242424;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .contact-card:hover {
+            background: #2d2d2d;
+        }
+
+        [data-theme="dark"] .back-button {
+            background: #242424;
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .back-button:hover {
+            background: #2d2d2d;
+        }
+
+        [data-theme="dark"] .card-icon .material-icons-sharp {
+            color: #2563eb;
+        }
+
+        [data-theme="dark"] .shine-effect {
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+        }
+
+        [data-theme="dark"] .hover-effect {
+            background: radial-gradient(
+                circle at var(--mouse-x, center) var(--mouse-y, center),
+                rgba(124, 138, 255, 0.1) 0%,
+                transparent 60%
+            );
+        }
+
+        /* Dark mode glass effect */
+        [data-theme="dark"] .contact-card::before {
+            background: linear-gradient(
+                120deg,
+                rgba(124, 138, 255, 0.1),
+                rgba(255, 255, 255, 0.05),
+                rgba(124, 138, 255, 0.1)
+            );
+        }
+
+        [data-theme="dark"] .arrow {
+            color: #2563eb;
+        }
+
+        /* Dark mode transitions */
+        .system-connect,
+        .info-card,
+        .contact-card,
+        .back-button,
+        .card-icon,
+        .feature-list li,
+        h3, h4, p {
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode icon container */
+        [data-theme="dark"] .icon-container {
+            background: rgba(124, 138, 255, 0.1);
+        }
+
+        [data-theme="dark"] .icon-container i {
+            color: #2563eb;
+        }
+
+        /* Dark mode connect button */
+        [data-theme="dark"] #connectWithUsBtn {
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] #connectWithUsBtn:hover {
+            color: #2563eb;
+        }
+
+        /* Base light theme styles */
+        body {
+            --background-color: #ffffff;
+            --text-color: #333333;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark theme styles */
+        body[data-theme="dark"] {
+            --background-color: #1a1a1a;
+            --text-color: #ffffff;
+        }
+
+        /* System connect section */
+        .system-connect {
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* Info and contact cards */
+        .info-card, 
+        .contact-card {
+            background: var(--background-color);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Text colors */
+        [data-theme="dark"] .info-card h3,
+        [data-theme="dark"] .contact-card h4,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] .logo-section h2 {
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .info-card p,
+        [data-theme="dark"] .contact-card p,
+        [data-theme="dark"] .feature-list li {
+            color: #e0e0e0;
+        }
+
+        /* Keep blue accent colors */
+        .primary,
+        [data-theme="dark"] .primary,
+        .card-icon .material-icons-sharp,
+        [data-theme="dark"] .card-icon .material-icons-sharp,
+        .feature-list .material-icons-sharp,
+        [data-theme="dark"] .feature-list .material-icons-sharp {
+            color: #2563eb;
+        }
+
+        /* Dark mode specific styles */
+        [data-theme="dark"] .info-card,
+        [data-theme="dark"] .contact-card {
+            background: #242424;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .contact-card:hover {
+            background: #2d2d2d;
+        }
+        </style>
+
+     <div class="modal-backdrop" id="logoutModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Logout Confirmation</h2>
+                    <p>Are you sure you want to logout?</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="cancel" onclick="hideLogoutModal()">Cancel</button>
+                    <button class="logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutModal(event) {
+            event.preventDefault();
+            document.getElementById('logoutModal').style.display = 'block';
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function logout() {
+            window.location.href = 'login/index.html';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('logoutModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                hideLogoutModal();
+            }
+        });
+    </script>
+    <script src="js_main/orders.js"></script>
+    <script src="js_main/index.js"></script>
+    <script src="js_main/loading.js"></script>
+    <script src="js_main/dino.js"></script>
+    <!-- Loading Modal -->
+<div id="spinnerModal" class="spinner-modal">
+    <div class="spinner-content">
+        <div class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h2>Loading...</h2>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const connectBtn = document.getElementById('connectWithUsBtn');
+        const backBtn = document.getElementById('backBtn');
+        const defaultView = document.getElementById('defaultView');
+        const contactView = document.getElementById('contactView');
+
+        connectBtn.addEventListener('click', function() {
+            defaultView.classList.add('fade-out');
+            setTimeout(() => {
+                defaultView.style.display = 'none';
+                contactView.style.display = 'block';
+                setTimeout(() => {
+                    contactView.classList.add('fade-in');
+                }, 50);
+            }, 300);
+        });
+
+        backBtn.addEventListener('click', function() {
+            contactView.classList.remove('fade-in');
+            setTimeout(() => {
+                contactView.style.display = 'none';
+                defaultView.style.display = 'block';
+                setTimeout(() => {
+                    defaultView.classList.remove('fade-out');
+                }, 50);
+            }, 300);
+        });
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeIcon = document.querySelector('.dark-mode');
+        
+        darkModeIcon.addEventListener('click', function() {
+            // Toggle the material-icons-sharp-active class
+            this.classList.toggle('material-icons-sharp-active');
+            
+            // Toggle dark theme
+            if (this.classList.contains('material-icons-sharp-active')) {
+                document.body.setAttribute('data-theme', 'dark');
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+            }
+        });
+    });
+    </script>
+    
+</body>
+
+</html>

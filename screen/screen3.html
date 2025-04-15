@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="css_courses/styles.css">
+    <link rel="stylesheet" href="style/loading.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/TaskMatrixMain/screen/images/tasklogo.png">
+    <title>TaskMatrix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/tasklogo.png" alt="Logo">
+                    <h2>Task<span class="primary">Matrix</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="screen1.html">
+                    <span class="material-icons-sharp">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="screen2.html">
+                    <span class="material-icons-sharp">phone_android</span>
+                    <h3>Android</h3>
+                </a>
+                <a href="screen3.html" class="active">
+                    <span class="material-icons-sharp">subject</span>
+                    <h3>My Course</h3>
+                </a>
+                <a href="screen4.html">
+                    <span class="material-icons-sharp">event_available</span>
+                    <h3>Calendar</h3>
+                </a>
+                <a href="screen5.html">
+                    <span class="material-icons-sharp">sports_esports</span>
+                    <h3>Dino Game</h3>
+                    <span class="message-count">27</span>
+                </a>
+                <a href="screen6.html">
+                    <span class="material-icons-sharp">inventory</span>
+                    <h3>To do List</h3>
+                </a>
+                <a href="screen7.html">
+                    <span class="material-icons-sharp">record_voice_over</span>
+                    <h3>Speech to Text Converter</h3>
+                </a>
+                <a href="screen8.html">
+                    <span class="material-icons-sharp">help</span>
+                    <h3>Help</h3>
+                </a>
+                <a href="login/index.html">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            <!-- Add this new search container -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Search courses and tasks...">
+                    <div class="search-animation"></div>
+                </div>
+            </div>
+            
+            <div class="insights">
+                <div class="active-courses">
+                    <span class="material-icons-sharp">menu_book</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Active Courses</h3>
+                            <h1 id="activeCourseCount">0</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="total-tasks">
+                    <span class="material-icons-sharp">task</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total Tasks</h3>
+                            <h1 id="totalTaskCount">0</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h1>Courses</h1>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <link rel="stylesheet" href="css_courses/styles.css">
+            <div class="app-container">
+                <div class="section">
+                    <div class="header">
+                        <h2><i class="fas fa-graduation-cap"></i> My Courses</h2>
+                        <button onclick="courseManager.showModal('addCourseModal')" class="add-btn">
+                            <i class="fas fa-plus"></i> Add Course
+                        </button>
+                    </div>
+                    <div id="coursesList" class="courses-list"></div>
+                </div>
+
+                <div class="section">
+                    <div class="header">
+                        <h2><i class="fas fa-tasks"></i> Tasks</h2>
+                        <button onclick="courseManager.showModal('addTaskModal')" class="add-btn">
+                            <i class="fas fa-plus"></i> Add Task
+                        </button>
+                    </div>
+                    <div class="task-container">
+                        <div class="task-list" id="taskList">
+                            <!-- Tasks will be loaded here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Course Modal -->
+            <div id="addCourseModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-graduation-cap"></i> Add Course</h2>
+                        <span class="close-btn" onclick="closeModal('addCourseModal')">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" id="courseCode" placeholder="Course Code (e.g. IT 206)">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="courseName" placeholder="Course Name">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="profName" placeholder="Professor Name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="courseManager.addCourse()" class="primary-btn">Add Course</button>
+                        <button onclick="courseManager.closeModal('addCourseModal')" class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Task Modal -->
+            <div id="addTaskModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-tasks"></i> Add Task</h2>
+                        <span class="close-btn" onclick="closeModal('addTaskModal')">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" id="taskName" placeholder="Task Name" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="taskCourse" required>
+                                <option value="">Select Course</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="taskTag" placeholder="Tag (e.g. Project)">
+                        </div>
+                        <div class="form-group">
+                            <input type="datetime-local" id="taskDeadline" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="reminder-label">
+                                <input type="checkbox" id="enableReminder"> Enable Reminders
+                                <i class="fas fa-info-circle" onclick="showReminderInfo()"></i>
+                            </label>
+                            <div id="reminderOptions" style="display: none;">
+                                <div class="email-verification-container">
+                                    <input type="email" id="userEmail" placeholder="Enter your email">
+                                    <button type="button" class="verify-email-btn" onclick="courseManager.sendVerificationCode()">
+                                        Verify Email
+                                    </button>
+                                </div>
+                                <div id="verificationStatus" style="display: none;" class="verification-status">
+                                    <i class="fas fa-check-circle"></i> Email Verified
+                                </div>
+                                <select id="reminderTime">
+                                    <option value="30">30 minutes before</option>
+                                    <option value="60">1 hour before</option>
+                                    <option value="1440">1 day before</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="courseManager.addTask()" class="primary-btn">Add Task</button>
+                        <button onclick="courseManager.closeModal('addTaskModal')" class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add this right after your add task modal -->
+            <div id="verificationModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeVerificationModal()">&times;</span>
+                    <h3>Email Verification</h3>
+                    <div class="form-group">
+                        <label for="verificationCode">Enter Verification Code:</label>
+                        <input type="text" id="verificationCode" placeholder="Enter 6-digit code">
+                        <button class="verify-btn" onclick="courseManager.verifyCode()">Verify</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="notificationContainer" class="notification-container"></div>
+
+            
+            
+        </main>
+        <!-- End of Main Content -->
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="loader">
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__bar"></div>
+                    <div class="loader__ball"></div>
+                  </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Guest</b></p>
+                        <small class="text-muted">User</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="images/default.png" alt="Profile Photo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="reminders">
+                <div class="header">
+                    <h2>TaskMatrix</h2>
+                    <span class="material-icons-sharp">task_alt</span>
+                </div>
+                <div class="notification">
+                    <div class="icon">
+                        <span class="material-icons-sharp">games</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Dino Game</h3>
+                            <small class="text-muted">High Score: 100</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+                <div class="notification deactive">
+                    <div class="icon">
+                        <span class="material-icons-sharp">edit</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>To do List</h3>
+                            <small class="text-muted">0 tasks</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+                <div class="notification">
+                    <div class="icon">
+                        <span class="material-icons-sharp">games</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Dino Game</h3>
+                            <small class="text-muted">Updated Score: 2196</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+                <div class="notification add-reminder">
+                    <div>
+                        <span class="material-icons-sharp">arrow_circle_right</span>
+                        <h3>GO TO OUR PAGE</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js_main/orders.js"></script>
+    <script src="js_main/index.js"></script>
+    
+
+    <!-- Course Tutorial Modal -->
+    <div class="modal-backdrop" id="courseTutorialModal">
+        <div class="modal-content animate">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Welcome to My Courses!</h2>
+                <span class="close-btn" onclick="closeTutorialModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="tutorial-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Course Management</h3>
+                    <ul>
+                        <li>Easily add and organize your courses</li>
+                        <li>Track assignments and deadlines</li>
+                        <li>View professor information</li>
+                    </ul>
+                </div>
+                <div class="tutorial-section">
+                    <h3><i class="fas fa-bell"></i> Email Reminders</h3>
+                    <ul>
+                        <li>Get notified about upcoming deadlines</li>
+                        <li>Verify your email to enable notifications</li>
+                        <li>Customize reminder timing</li>
+                    </ul>
+                </div>
+                <div class="tutorial-section">
+                    <h3><i class="fas fa-tasks"></i> Task Organization</h3>
+                    <ul>
+                        <li>Create and manage course-specific tasks</li>
+                        <li>Set priorities and deadlines</li>
+                        <li>Track your progress</li>
+                    </ul>
+                </div>
+                <div class="dont-show-again">
+                    <label>
+                        <input type="checkbox" id="dontShowAgain">
+                        Don't show this message again
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeTutorialModal()" class="primary-btn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add these styles to your existing styles -->
+    <style>
+        .tutorial-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .tutorial-section h3 {
+            color: var(--color-primary);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tutorial-section ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        .tutorial-section li {
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .tutorial-section li:before {
+            content: "•";
+            color: var(--color-primary);
+            position: absolute;
+            left: -1rem;
+        }
+
+        .dont-show-again {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dont-show-again input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            max-width: 600px;
+            width: 90%;
+            margin: 2rem auto;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .reminder-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reminder-label i {
+            color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        .benefits-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .verification-status {
+            color: #28a745;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .course-card {
+            position: relative;
+        }
+
+        .delete-course-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover .delete-course-btn {
+            display: flex;
+        }
+
+        .delete-course-btn:hover {
+            background: rgba(255, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .delete-course-btn i {
+            font-size: 16px;
+        }
+    </style>
+
+    <!-- Add this script -->
+    <script>
+        // Check if tutorial should be shown
+        function shouldShowTutorial() {
+            return localStorage.getItem('courseTutorialDismissed') !== 'true';
+        }
+
+        // Show tutorial modal
+        function showTutorialModal() {
+            if (shouldShowTutorial()) {
+                const modal = document.getElementById('courseTutorialModal');
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+            }
+        }
+
+        // Close tutorial modal
+        function closeTutorialModal() {
+            const modal = document.getElementById('courseTutorialModal');
+            const dontShowAgain = document.getElementById('dontShowAgain');
+            
+            if (dontShowAgain.checked) {
+                localStorage.setItem('courseTutorialDismissed', 'true');
+            }
+            
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling when modal is closed
+        }
+
+        // Show tutorial when page loads
+        document.addEventListener('DOMContentLoaded', showTutorialModal);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('courseTutorialModal');
+            if (event.target === modal) {
+                closeTutorialModal();
+            }
+        });
+    </script>
+
+    <!-- Add this new modal for reminder benefits -->
+    <div id="reminderInfoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-bell"></i> Email Reminder Benefits</h2>
+                <span class="close-btn" onclick="closeModal('reminderInfoModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <i class="fas fa-clock"></i>
+                        <h3>Never Miss Deadlines</h3>
+                        <p>Get automatic email notifications before your tasks are due</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>Customizable Timing</h3>
+                        <p>Choose when to receive reminders - 30 minutes, 1 hour, or 1 day before</p>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-tasks"></i>
+                        <h3>Task Details Included</h3>
+                        <p>Receive complete task information in your email</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js_main/loading.js"></script>
+    <!-- Loading Modal -->
+<div id="spinnerModal" class="spinner-modal">
+    <div class="spinner-content">
+        <div class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h2>Loading...</h2>
+    </div>
+</div>
+
+<script src="js_courses/courseManager.js"></script>
+
+</body>
+
+</html>

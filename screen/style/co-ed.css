@@ -1,0 +1,302 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f2f5;
+    height: 100vh;
+    padding: 10px;
+}
+
+/* Theme Colors */
+:root {
+    /* Default Light Theme */
+    --editor-bg: #ffffff;
+    --editor-text: #2a2a2a;
+    --line-numbers: #999;
+    --line-numbers-bg: #f5f5f5;
+    --toolbar-bg: #f8f9fa;
+    --error-line: rgba(255, 0, 0, 0.1);
+    --error-text: #d32f2f;
+    --highlight-line: rgba(255, 255, 0, 0.1);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    --editor-bg: #1e1e1e;
+    --editor-text: #d4d4d4;
+    --line-numbers: #858585;
+    --line-numbers-bg: #252526;
+    --toolbar-bg: #333333;
+    --error-line: rgba(255, 0, 0, 0.2);
+    --error-text: #ff6b6b;
+    --highlight-line: rgba(255, 255, 0, 0.05);
+}
+
+/* Dracula Theme */
+[data-theme="dracula"] {
+    --editor-bg: #282a36;
+    --editor-text: #f8f8f2;
+    --line-numbers: #6272a4;
+    --line-numbers-bg: #282a36;
+    --toolbar-bg: #44475a;
+    --error-line: rgba(255, 85, 85, 0.2);
+    --error-text: #ff5555;
+    --highlight-line: rgba(189, 147, 249, 0.1);
+}
+
+/* GitHub Theme */
+[data-theme="github"] {
+    --editor-bg: #ffffff;
+    --editor-text: #24292e;
+    --line-numbers: #babbbd;
+    --line-numbers-bg: #f6f8fa;
+    --toolbar-bg: #f6f8fa;
+    --error-line: rgba(215, 58, 73, 0.1);
+    --error-text: #d73a49;
+    --highlight-line: rgba(3, 102, 214, 0.1);
+}
+
+.editor-container {
+    background: var(--editor-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: calc(100vh - 20px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.toolbar {
+    background: var(--toolbar-bg);
+    padding: 12px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.split-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #e9ecef;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background: #dee2e6;
+    transform: translateY(-1px);
+}
+
+.btn.small {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.run-btn {
+    background: #28a745;
+    color: white;
+}
+
+.run-btn:hover {
+    background: #218838;
+}
+
+.share-btn {
+    background: #0d6efd;
+    color: white;
+}
+
+.share-btn:hover {
+    background: #0b5ed7;
+}
+
+.language-select,
+.theme-toggle {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--line-numbers);
+    background: var(--editor-bg);
+    color: var(--editor-text);
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.file-input {
+    display: none;
+}
+
+.editor-wrapper {
+    display: flex;
+    background: var(--editor-bg);
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    flex: 1;
+    border-right: 1px solid #e9ecef;
+    overflow: hidden;
+    position: relative;
+}
+
+.line-numbers {
+    padding: 15px 10px;
+    background: var(--line-numbers-bg);
+    color: var(--line-numbers);
+    text-align: right;
+    user-select: none;
+    min-width: 40px;
+}
+
+.code-editor {
+    flex: 1;
+    padding: 15px;
+    color: var(--editor-text);
+    background: var(--editor-bg);
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+.preview-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.preview-header {
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.preview-header h3 {
+    font-size: 14px;
+    color: #495057;
+}
+
+.preview-frame {
+    flex: 1;
+    border: none;
+    background: white;
+}
+
+.status-bar {
+    padding: 8px 15px;
+    background: var(--toolbar-bg);
+    color: var(--editor-text);
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+/* Error Highlighting */
+.error-line {
+    background: var(--error-line);
+    position: relative;
+}
+
+.error-message {
+    position: absolute;
+    right: 10px;
+    color: var(--error-text);
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+/* Syntax Highlighting */
+.token.keyword { color: #c678dd; }
+.token.string { color: #98c379; }
+.token.number { color: #d19a66; }
+.token.comment { color: #7f848e; font-style: italic; }
+.token.function { color: #61afef; }
+.token.class-name { color: #e5c07b; }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Toolbar layout */
+.toolbar {
+    background: var(--toolbar-bg);
+    padding: 12px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Create groups for toolbar items */
+.toolbar-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.toolbar-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.language-select,
+.theme-toggle {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--line-numbers);
+    background: var(--editor-bg);
+    color: var(--editor-text);
+    cursor: pointer;
+    min-width: 120px;
+}
+
+/* Add hover effect */
+.language-select:hover,
+.theme-toggle:hover {
+    border-color: var(--editor-text);
+}

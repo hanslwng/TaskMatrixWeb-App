@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/dashboard.css">
+    <link rel="stylesheet" href="style/loading.css">
+    <link rel="stylesheet" href="style/hand.css">
+    <link rel="icon" type="image/png" href="/TaskMatrixMain/screen/images/tasklogo.png">
+    <title>TaskMatrix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/tasklogo.png">
+                    <h2>Task<span class="primary">Matrix</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="screen1.html" class="active">
+                    <span class="material-icons-sharp">
+                        dashboard
+                    </span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="screen2.html">
+                    <span class="material-icons-sharp">
+                        phone_android
+                    </span>
+                    <h3>Android</h3>
+                </a>
+                <a href="screen3.html">
+                    <span class="material-icons-sharp">
+                        subject
+                    </span>
+                    <h3>My Course</h3>
+                </a>
+                <a href="screen4.html">
+                    <span class="material-icons-sharp">
+                        event_available
+                    </span>
+                    <h3>Calendar</h3>
+                </a>
+                <a href="screen5.html">
+                    <span class="material-icons-sharp">
+                        sports_esports
+                    </span>
+                    <h3>Dino Game</h3>
+                    <span class="message-count">27</span>
+                </a>
+                <a href="screen6.html">
+                    <span class="material-icons-sharp">
+                        inventory
+                    </span>
+                    <h3>To do List</h3>
+                </a>
+                <a href="screen7.html">
+                    <span class="material-icons-sharp">record_voice_over</span>
+                    <h3>Speech to Text Converter</h3>
+                </a>
+                <a href="screen8.html">
+                    <span class="material-icons-sharp">help</span>
+                    <h3>Help</h3>
+                </a>
+                <a href="login/index.html">
+                    <span class="material-icons-sharp">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- modern gradient design with shine effect -->
+
+        <!-- Main Content -->
+        <main>
+            <h1>Dashboard</h1>
+            
+            <!-- Overview Section -->
+            <div class="overview-container">
+                <div class="clock-section">
+                    <div class="clock">
+                        <div id="time"></div>
+                        <div id="date"></div>
+                    </div>
+                </div>
+                
+                <div class="welcome-section">
+                    <h2>Welcome back, <span class="user-name">Guest</span>!</h2>
+                    <p class="date-greeting" id="dateGreeting"></p>
+                </div>
+            </div>
+
+            <!-- Quick Actions with Map -->
+            <div class="quick-actions">
+                <div class="location-header">
+                    <h2>Live Location</h2>
+                    <button class="info-btn" id="locationInfoBtn">
+                        <span class="material-icons-sharp">info</span>
+                    </button>
+                </div>
+                
+                <!-- Location Info Modal -->
+                <div id="locationInfoModal" class="modal">
+                    <div class="modal-content location-info-modal">
+                        <div class="modal-header">
+                            <h2>📍 Location Features</h2>
+                            <span class="close-modal">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <span class="material-icons-sharp">schedule</span>
+                                    <div class="feature-text">
+                                        <h3>Smart Time Tracking</h3>
+                                        <p>Automatic location-based time tracking for tasks</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <span class="material-icons-sharp">notifications_active</span>
+                                    <div class="feature-text">
+                                        <h3>Location Alerts</h3>
+                                        <p>Get notified of nearby tasks and deadlines</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <span class="material-icons-sharp">route</span>
+                                    <div class="feature-text">
+                                        <h3>Route Optimization</h3>
+                                        <p>Smart routing between your scheduled tasks</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <span class="material-icons-sharp">insights</span>
+                                    <div class="feature-text">
+                                        <h3>Movement Insights</h3>
+                                        <p>Analyze patterns to optimize daily routines</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <span class="material-icons-sharp">security</span>
+                                    <div class="feature-text">
+                                        <h3>Secure Data</h3>
+                                        <p>End-to-end encrypted location tracking</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <span class="material-icons-sharp">share_location</span>
+                                    <div class="feature-text">
+                                        <h3>Team Sync</h3>
+                                        <p>Optional sharing for better collaboration</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Container -->
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-controls">
+                        <button id="toggle3DBtn" class="map-btn" type="button">
+                            <span class="material-icons-sharp">view_in_ar</span>
+                            3D View
+                        </button>
+                        <button id="currentLocationBtn" class="map-btn" type="button">
+                            <span class="material-icons-sharp">my_location</span>
+                            Track Me
+                        </button>
+                        <button id="compassBtn" class="map-btn" type="button">
+                            <span class="material-icons-sharp">explore</span>
+                            Reset North
+                        </button>
+                    </div>
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <span class="material-icons-sharp">search</span>
+                            <input type="text" id="locationSearch" placeholder="Search any location...">
+                            <button id="clearSearch" class="clear-search">
+                                <span class="material-icons-sharp">close</span>
+                            </button>
+                        </div>
+                        <div class="search-results" id="searchResults"></div>
+                    </div>
+                    <div class="map-info">
+                        <div class="coordinates">
+                            <span id="latitude">Lat: --</span>
+                            <span id="longitude">Long: --</span>
+                        </div>
+                        <div id="altitude">
+                            <span class="material-icons-sharp">height</span>
+                            <span>Altitude: -- m</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Info -->
+                <div class="location-info">
+                    <h3>Current Location</h3>
+                    <div id="locationAddress">Fetching address...</div>
+                    <div class="weather-info" id="weatherInfo">
+                        <span class="material-icons-sharp">wb_sunny</span>
+                        <span id="temperature">--°C</span>
+                        <span id="weatherDesc">Loading weather...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats and Notes Grid -->
+            <div class="dashboard-grid">
+                <!-- Statistics Section -->
+                <div class="stats-container">
+                    <h2>Task Statistics</h2>
+                    <div class="analyse">
+                        <div class="sales">
+                            <div class="status">
+                                <div class="info">
+                                    <h3>Task Done</h3>
+                                    <h1 id="tasksDone">0</h1>
+                                </div>
+                                <div class="progresss">
+                                    <svg>
+                                        <circle cx="38" cy="38" r="36"></circle>
+                                    </svg>
+                                    <div class="percentage">
+                                        <p id="tasksDonePercentage">0%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="visits">
+                            <div class="status">
+                                <div class="info">
+                                    <h3>Task Missed</h3>
+                                    <h1 id="tasksMissed">0</h1>
+                                </div>
+                                <div class="progresss">
+                                    <svg>
+                                        <circle cx="38" cy="38" r="36"></circle>
+                                    </svg>
+                                    <div class="percentage">
+                                        <p id="tasksMissedPercentage">0%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="searches">
+                            <div class="status">
+                                <div class="info">
+                                    <h3>Pending</h3>
+                                    <h1 id="tasksPending">0</h1>
+                                </div>
+                                <div class="progresss">
+                                    <svg>
+                                        <circle cx="38" cy="38" r="36"></circle>
+                                    </svg>
+                                    <div class="percentage">
+                                        <p id="tasksPendingPercentage">0%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Section -->
+                <div class="notes-section">
+                    <div class="notes-header">
+                        <h2>Quick Notes</h2>
+                        <button id="addNoteBtn" class="add-note-btn">
+                            <span class="material-icons-sharp">add</span>
+                        </button>
+                    </div>
+                    <div class="notes-container" id="notesContainer">
+                        <!-- Notes will be added here dynamically -->
+                    </div>
+                </div>
+
+                <!-- Motivation Quote -->
+                <div class="motivation-section">
+                    <h2>Daily Motivation</h2>
+                    <div class="quote-container">
+                        <p id="quoteText"></p>
+                        <small id="quoteAuthor"></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Tasks Section -->
+            <div class="recent-tasks">
+                <h2>Activity History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Description</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Activity history will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <!-- End of Main Content -->
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+            
+            <div class="🤚">
+	            <div class="👉"></div>
+	            <div class="👉"></div>
+	            <div class="👉"></div>
+	            <div class="👉"></div>
+	            <div class="🌴"></div>		
+	            <div class="👍"></div>
+            </div>
+
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Guest</b></p>
+                        <small class="text-muted">User</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="images/default.png">
+                    </div>
+                </div>
+            </div>
+            <!-- End of Nav -->
+
+            <!-- Replace the reminders div with music player -->
+            <div class="system-connect">
+                <div class="header">
+                    <div class="logo-section">
+                        <img src="images/tasklogo.png" alt="TaskMatrix Logo" class="logo">
+                        <h2>Task<span class="primary">Matrix</span></h2>
+                    </div>
+                </div>
+
+                <!-- Default View -->
+                <div id="defaultView">
+                    <div class="info-cards">
+                        <!-- System Overview Card -->
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <span class="material-icons-sharp">rocket_launch</span>
+                            </div>
+                            <h3>Smart Task Management</h3>
+                            <p>TaskMatrix revolutionizes your productivity with AI-powered task organization, intelligent scheduling, and seamless course management.</p>
+                            <div class="shine-effect"></div>
+                        </div>
+
+                        <!-- Features Card -->
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <span class="material-icons-sharp">stars</span>
+                            </div>
+                            <h3>Key Features</h3>
+                            <ul class="feature-list">
+                                <li><span class="material-icons-sharp">check_circle</span>Smart Course Tracking</li>
+                                <li><span class="material-icons-sharp">check_circle</span>Interactive Calendar</li>
+                                <li><span class="material-icons-sharp">check_circle</span>Real-time Updates</li>
+                                <li><span class="material-icons-sharp">check_circle</span>Progress Analytics</li>
+                            </ul>
+                            <div class="shine-effect"></div>
+                        </div>
+                    </div>
+
+                    <div class="contact-section">
+                        <h3 id="connectWithUsBtn" style="cursor: pointer;">Connect With Us</h3>
+                    </div>
+                </div>
+
+                <!-- Contact View (Initially Hidden) -->
+                <div id="contactView" style="display: none;">
+                    <button id="backBtn" class="back-button">
+                        <span class="material-icons-sharp">arrow_back</span>
+                        Back
+                    </button>
+                    
+                    <div class="contact-cards">
+                        <a href="https://facebook.com/yourusername" class="contact-card facebook" target="_blank">
+                            <div class="icon-container">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h4>Facebook</h4>
+                                <p>Follow our updates</p>
+                            </div>
+                            <span class="material-icons-sharp arrow">arrow_forward</span>
+                            <div class="hover-effect"></div>
+                        </a>
+
+                        <a href="https://github.com/yourusername" class="contact-card github" target="_blank">
+                            <div class="icon-container">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h4>GitHub</h4>
+                                <p>View our code</p>
+                            </div>
+                            <span class="material-icons-sharp arrow">arrow_forward</span>
+                            <div class="hover-effect"></div>
+                        </a>
+
+                        <a href="mailto:your.email@gmail.com" class="contact-card gmail" target="_blank">
+                            <div class="icon-container">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h4>Email Us</h4>
+                                <p>Get support</p>
+                            </div>
+                            <span class="material-icons-sharp arrow">arrow_forward</span>
+                            <div class="hover-effect"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+            .system-connect {
+                background: #ffffff;
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+                margin: 2rem auto;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .logo-section {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .info-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+                margin: 2rem 0;
+            }
+
+            .info-card {
+                background: #ffffff;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s ease;
+            }
+
+            .info-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .card-icon {
+                background: #2563eb;
+                width: 50px;
+                height: 50px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .card-icon .material-icons-sharp {
+                color: #ffffff !important;
+                font-size: 24px;
+            }
+
+            [data-theme="dark"] .card-icon .material-icons-sharp {
+                color: #ffffff !important;
+            }
+
+            .info-card:hover .card-icon {
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+            }
+
+            .feature-list {
+                list-style: none;
+                padding: 0;
+                margin-top: 1rem;
+            }
+
+            .feature-list li {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 0.8rem;
+                color: #4b5563;
+            }
+
+            .feature-list span {
+                color: #2563eb;
+                font-size: 18px;
+            }
+
+            .contact-section {
+                margin-top: 3rem;
+            }
+
+            .contact-section h3 {
+                text-align: center;
+                margin-bottom: 2rem;
+                color: #1a1a1a;
+            }
+
+            .contact-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .contact-card {
+                display: flex;
+                align-items: center;
+                padding: 1.5rem;
+                background: #ffffff;
+                border-radius: 12px;
+                text-decoration: none;
+                color: #1a1a1a;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                transition: all 0.3s ease;
+            }
+
+            .icon-container {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 1rem;
+                z-index: 1;
+            }
+
+            .contact-info {
+                flex: 1;
+                z-index: 1;
+            }
+
+            .contact-info h4 {
+                margin: 0;
+                font-size: 1.1rem;
+            }
+
+            .contact-info p {
+                margin: 0.3rem 0 0;
+                font-size: 0.9rem;
+                color: #666;
+            }
+
+            .arrow {
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1;
+            }
+
+            .hover-effect {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #2563eb;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .contact-card:hover {
+                color: white;
+                transform: translateY(-3px);
+            }
+
+            .contact-card:hover .hover-effect {
+                opacity: 1;
+            }
+
+            .contact-card:hover .arrow {
+                opacity: 1;
+                color: white;
+            }
+
+            .contact-card:hover .contact-info p {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .shine-effect {
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 50%;
+                height: 100%;
+                background: linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0) 100%
+                );
+                transform: skewX(-25deg);
+                animation: shine 3s infinite;
+            }
+
+            @keyframes shine {
+                0% { left: -100%; }
+                20% { left: 100%; }
+                100% { left: 100%; }
+            }
+
+            @media screen and (max-width: 768px) {
+                .system-connect {
+                    padding: 1.5rem;
+                    margin: 1rem;
+                }
+
+                .contact-cards {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Add these new styles */
+            .back-button {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: none;
+                border: none;
+                color: #2563eb;
+                cursor: pointer;
+                padding: 0.5rem;
+                margin-bottom: 1rem;
+                font-size: 1rem;
+                transition: transform 0.3s ease;
+            }
+
+            .back-button:hover {
+                transform: translateX(-5px);
+            }
+
+            #defaultView, #contactView {
+                opacity: 1;
+                transition: opacity 0.3s ease;
+            }
+
+            .fade-out {
+                opacity: 0 !important;
+            }
+
+            .fade-in {
+                opacity: 1 !important;
+            }
+
+            /* Add these dark mode styles */
+            [data-theme="dark"] .system-connect {
+                background: #1a1a1a;
+            }
+
+            [data-theme="dark"] .info-card {
+                background: #242424;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            [data-theme="dark"] .info-card:hover {
+                background: #2d2d2d;
+            }
+
+            [data-theme="dark"] .info-card h3,
+            [data-theme="dark"] .contact-card h4 {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .info-card p,
+            [data-theme="dark"] .contact-card p {
+                color: #e0e0e0;
+            }
+
+            [data-theme="dark"] .feature-list li {
+                color: #e0e0e0;
+            }
+
+            [data-theme="dark"] .feature-list .material-icons-sharp {
+                color: #2563eb;
+            }
+
+            [data-theme="dark"] .contact-card {
+                background: #242424;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            [data-theme="dark"] .contact-card:hover {
+                background: #2d2d2d;
+            }
+
+            [data-theme="dark"] .back-button {
+                background: #242424;
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .back-button:hover {
+                background: #2d2d2d;
+            }
+
+            [data-theme="dark"] .card-icon .material-icons-sharp {
+                color: #2563eb;
+            }
+
+            [data-theme="dark"] .shine-effect {
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent
+                );
+            }
+
+            [data-theme="dark"] .hover-effect {
+                background: radial-gradient(
+                    circle at var(--mouse-x, center) var(--mouse-y, center),
+                    rgba(124, 138, 255, 0.1) 0%,
+                    transparent 60%
+                );
+            }
+
+            /* Dark mode glass effect */
+            [data-theme="dark"] .contact-card::before {
+                background: linear-gradient(
+                    120deg,
+                    rgba(124, 138, 255, 0.1),
+                    rgba(255, 255, 255, 0.05),
+                    rgba(124, 138, 255, 0.1)
+                );
+            }
+
+            [data-theme="dark"] .arrow {
+                color: #2563eb;
+            }
+
+            /* Dark mode transitions */
+            .system-connect,
+            .info-card,
+            .contact-card,
+            .back-button,
+            .card-icon,
+            .feature-list li,
+            h3, h4, p {
+                transition: all 0.3s ease;
+            }
+
+            /* Dark mode icon container */
+            [data-theme="dark"] .icon-container {
+                background: rgba(124, 138, 255, 0.1);
+            }
+
+            [data-theme="dark"] .icon-container i {
+                color: #2563eb;
+            }
+
+            /* Dark mode connect button */
+            [data-theme="dark"] #connectWithUsBtn {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] #connectWithUsBtn:hover {
+                color: #2563eb;
+            }
+
+            /* Base light theme styles */
+            body {
+                --background-color: #ffffff;
+                --text-color: #333333;
+                transition: all 0.3s ease;
+            }
+
+            /* Dark theme styles */
+            body[data-theme="dark"] {
+                --background-color: #1a1a1a;
+                --text-color: #ffffff;
+            }
+
+            /* System connect section */
+            .system-connect {
+                background: var(--background-color);
+                color: var(--text-color);
+            }
+
+            /* Info and contact cards */
+            .info-card, 
+            .contact-card {
+                background: var(--background-color);
+                color: var(--text-color);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Text colors */
+            [data-theme="dark"] .info-card h3,
+            [data-theme="dark"] .contact-card h4,
+            [data-theme="dark"] h2,
+            [data-theme="dark"] .logo-section h2 {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .info-card p,
+            [data-theme="dark"] .contact-card p,
+            [data-theme="dark"] .feature-list li {
+                color: #e0e0e0;
+            }
+
+            /* Keep blue accent colors */
+            .primary,
+            [data-theme="dark"] .primary,
+            .card-icon .material-icons-sharp,
+            [data-theme="dark"] .card-icon .material-icons-sharp,
+            .feature-list .material-icons-sharp,
+            [data-theme="dark"] .feature-list .material-icons-sharp {
+                color: #2563eb;
+            }
+
+            /* Dark mode specific styles */
+            [data-theme="dark"] .info-card,
+            [data-theme="dark"] .contact-card {
+                background: #242424;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+
+            [data-theme="dark"] .contact-card:hover {
+                background: #2d2d2d;
+            }
+            </style>
+
+<!-- Add this script tag at the bottom of the body -->
+
+
+        <!-- Logout Modal -->
+        <div class="modal-backdrop" id="logoutModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Logout Confirmation</h2>
+                    <p>Are you sure you want to logout?</p>
+                </div>
+                <div class="modal-buttons">
+                    <button class="cancel" onclick="hideLogoutModal()">Cancel</button>
+                    <button class="logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogoutModal(event) {
+            event.preventDefault();
+            document.getElementById('logoutModal').style.display = 'block';
+        }
+
+        function hideLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function logout() {
+            window.location.href = 'index.html';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('logoutModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                hideLogoutModal();
+            }
+        });
+    </script>
+
+    <script src="js_main/orders.js"></script>
+    <script src="js_main/index.js"></script>  
+    <script src="js_main/dashboard.js"></script>
+    <script src="js_main/map.js"></script>
+    <script src="js_main/activity-history.js"></script>
+    <script src="js_main/motivation.js"></script>
+    <script src="js_main/main.js"></script>
+    <script>
+    (function() {
+        const userName = localStorage.getItem('userName');
+        if (userName) {
+            showWelcomeModal(userName);
+        }
+    })();
+
+    function showWelcomeModal(userName) {
+        const modal = document.getElementById('welcomeModal');
+        const userNameElement = document.getElementById('userName');
+        const userInitialElement = document.getElementById('userInitial');
+        
+        userNameElement.textContent = userName;
+        userInitialElement.textContent = userName.charAt(0);
+        
+        modal.style.display = 'block';
+        
+        setTimeout(() => {
+            modal.style.opacity = '0';
+            modal.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                localStorage.removeItem('userName');
+            }, 300);
+        }, 5000);
+    }
+    </script>
+
+    <!-- Internet Connection Modal -->
+    <div id="connectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="material-icons-sharp warning-icon">warning</span>
+                <h2>Internet Connection Required</h2>
+            </div>
+            <div class="modal-body">
+                <p>This feature requires an active internet connection to load maps and location data.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="checkConnectionBtn" class="primary-btn">Check Connection</button>
+                <button id="closeModalBtn" class="secondary-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js_main/motivation.js"></script>
+    <script src="js_main/main.js"></script>
+    <script src="js_main/loading.js"></script>
+
+    <!-- Update the event modal form -->
+    <div id="addEventModal" class="modal-backdrop" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add New Event</h2>
+            </div>
+            <div class="modal-content">
+                <form id="eventForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label for="eventType">Event Type:</label>
+                        <select id="eventType" required>
+                            <option value="">Select Event Type</option>
+                            <option value="date">Date/Romantic</option>
+                            <option value="school">School Event</option>
+                            <option value="work">Work Meeting</option>
+                            <option value="personal">Personal</option>
+                            <option value="family">Family Gathering</option>
+                            <option value="friends">Friends Meetup</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventName">Event Name:</label>
+                        <input type="text" id="eventName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDate">Date:</label>
+                        <input type="date" id="eventDate" required>
+                    </div>
+                    <div class="form-group time-group">
+                        <div>
+                            <label for="startTime">Start Time:</label>
+                            <input type="time" id="startTime" required>
+                        </div>
+                        <div>
+                            <label for="endTime">End Time:</label>
+                            <input type="time" id="endTime" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Description:</label>
+                        <textarea id="eventDescription" placeholder="Add event details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventReminder">Set Reminder:</label>
+                        <select id="eventReminder">
+                            <option value="none">No Reminder</option>
+                            <option value="15">15 minutes before</option>
+                            <option value="30">30 minutes before</option>
+                            <option value="60">1 hour before</option>
+                            <option value="1440">1 day before</option>
+                        </select>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="cancel" onclick="closeEventModal()">Cancel</button>
+                        <button type="button" class="save-btn" id="saveEventBtn">Save Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="spinnerModal" class="spinner-modal">
+        <div class="spinner-content">
+            <div class="spinner">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <h2>Loading...</h2>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const connectBtn = document.getElementById('connectWithUsBtn');
+        const backBtn = document.getElementById('backBtn');
+        const defaultView = document.getElementById('defaultView');
+        const contactView = document.getElementById('contactView');
+
+        connectBtn.addEventListener('click', function() {
+            defaultView.classList.add('fade-out');
+            setTimeout(() => {
+                defaultView.style.display = 'none';
+                contactView.style.display = 'block';
+                setTimeout(() => {
+                    contactView.classList.add('fade-in');
+                }, 50);
+            }, 300);
+        });
+
+        backBtn.addEventListener('click', function() {
+            contactView.classList.remove('fade-in');
+            setTimeout(() => {
+                contactView.style.display = 'none';
+                defaultView.style.display = 'block';
+                setTimeout(() => {
+                    defaultView.classList.remove('fade-out');
+                }, 50);
+            }, 300);
+        });
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeIcon = document.querySelector('.dark-mode');
+        
+        darkModeIcon.addEventListener('click', function() {
+            // Toggle the material-icons-sharp-active class
+            this.classList.toggle('material-icons-sharp-active');
+            
+            // Toggle dark theme
+            if (this.classList.contains('material-icons-sharp-active')) {
+                document.body.setAttribute('data-theme', 'dark');
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

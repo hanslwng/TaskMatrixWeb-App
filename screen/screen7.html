@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/speech.css">
+    <link rel="stylesheet" href="style/loading.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="icon" type="image/png" href="/TaskMatrixMain/screen/images/tasklogo.png">
+    <title>TaskMatrix</title>
+    
+</head>
+<body>
+
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/check.png">
+                    <h2>Task<span class="primary">Matrix</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="screen1.html">
+                    <span class="material-icons-sharp">
+                        dashboard
+                    </span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="screen2.html">
+                    <span class="material-icons-sharp">
+                        phone_android
+                    </span>
+                    <h3>Android</h3>
+                </a>
+                <a href="screen3.html">
+                    <span class="material-icons-sharp">
+                        subject
+                    </span>
+                    <h3>My Course</h3>
+                </a>
+                <a href="screen4.html">
+                    <span class="material-icons-sharp">
+                        event_available
+                    </span>
+                    <h3>Calendar</h3>
+                </a>
+                <a href="screen5.html">
+                    <span class="material-icons-sharp">
+                        sports_esports
+                    </span>
+                    <h3>Dino Game</h3>
+                    <span class="message-count">27</span>
+                </a>
+                <a href="screen6.html">
+                    <span class="material-icons-sharp">
+                        inventory
+                    </span>
+                    <h3>To do List</h3>
+                </a>
+                <a href="screen7.html" class="active">
+                    <span class="material-icons-sharp">record_voice_over</span>
+                    <h3>Speech to Text Converter</h3>
+                </a>
+                <a href="screen8.html">
+                    <span class="material-icons-sharp">help</span>
+                    <h3>Help</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            <div id="particles-js"></div>
+
+            <div class="speech-container">
+                <div class="header-section">
+                    <h1>Speech to Text Converter</h1>
+                    <button class="info-btn" id="showInfo">
+                        <span class="material-icons-sharp">help_outline</span>
+                    </button>
+                </div>
+
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <span class="material-icons-sharp">translate</span>
+                        <h3>Multi-language</h3>
+                        <select id="language-select" class="language-select">
+                            <option value="en-US">English (US)</option>
+                            <option value="es-ES">Spanish</option>
+                            <option value="fr-FR">French</option>
+                            <option value="de-DE">German</option>
+                            <option value="ja-JP">Japanese</option>
+                        </select>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <span class="material-icons-sharp">settings_voice</span>
+                        <h3>Microphone</h3>
+                        <select id="mic-select" class="mic-select">
+                            <option value="">Select Microphone</option>
+                        </select>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="material-icons-sharp">speed</span>
+                        <h3>Word Count</h3>
+                        <div class="word-count">0 words</div>
+                    </div>
+
+                    <div class="feature-card" id="showAIAssistant">
+                        <span class="material-icons-sharp">smart_toy</span>
+                        <h3>AI Assistant</h3>
+                        <p class="feature-description">Get help organizing tasks</p>
+                    </div>
+                </div>
+
+                <div class="mic-status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Microphone is ready</span>
+                </div>
+
+                <div class="speech-box">
+                    <div class="pulse-ring"></div>
+                    <button id="speech-btn">
+                        <span class="material-icons-sharp mic-icon">mic</span>
+                    </button>
+                    <p class="speech-label">Click to speak</p>
+                </div>
+
+                <div class="text-output">
+                    <textarea id="output" readonly placeholder="Your speech will appear here..."></textarea>
+                    <div class="actions">
+                        <button class="action-btn copy-btn" title="Copy text">
+                            <span class="material-icons-sharp">content_copy</span>
+                        </button>
+                        <button class="action-btn download-btn" title="Download as TXT">
+                            <span class="material-icons-sharp">download</span>
+                        </button>
+                        <button class="action-btn clear-btn" title="Clear text">
+                            <span class="material-icons-sharp">delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Modal -->
+            <div id="infoModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>How to Use Speech to Text</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="instruction-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Select Your Microphone</h3>
+                                <p>Choose your preferred microphone from the dropdown menu.</p>
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Choose Language</h3>
+                                <p>Select the language you'll be speaking in.</p>
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Start Speaking</h3>
+                                <p>Click the microphone button and start speaking clearly.</p>
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3>Manage Your Text</h3>
+                                <p>Use the buttons below to copy, download, or clear your text.</p>
+                            </div>
+                        </div>
+                        <div class="tips">
+                            <h3>Tips for Better Results:</h3>
+                            <ul>
+                                <li>Speak clearly and at a moderate pace</li>
+                                <li>Minimize background noise</li>
+                                <li>Keep your microphone at a consistent distance</li>
+                                <li>Use proper pronunciation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Assistant Modal -->
+            <div id="aiAssistantModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>AI Task Assistant</h2>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="chat-container">
+                            <div class="chat-messages">
+                                <div class="message assistant">
+                                    <span class="material-icons-sharp bot-icon">smart_toy</span>
+                                    <div class="message-content">
+                                        Hello! I can help you organize tasks and set reminders. Here are some things you can ask me:
+                                        <ul>
+                                            <li>"Remind me to submit the project report tomorrow at 3 PM"</li>
+                                            <li>"What tasks do I have for today?"</li>
+                                            <li>"Help me break down my thesis writing into smaller tasks"</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" placeholder="Type your message here..." id="aiInput">
+                                <button class="send-btn">
+                                    <span class="material-icons-sharp">send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- End of Main Content -->
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">
+                        menu
+                    </span>
+                </button>
+                <div class="dark-mode">
+                    <span class="material-icons-sharp active">
+                        light_mode
+                    </span>
+                    <span class="material-icons-sharp">
+                        dark_mode
+                    </span>
+                </div>
+
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Arlou</b></p>
+                        <small class="text-muted">User</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="images/default.png">
+                    </div>
+                </div>
+
+            </div>
+            <!-- End of Nav -->
+
+           
+            <div class="system-connect"></div>
+            <div class="header">
+                <div class="logo-section">
+                    
+                </div>
+            </div>
+
+            <!-- Default View -->
+            <div id="defaultView">
+                <div class="info-cards">
+                    <!-- System Overview Card -->
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <span class="material-icons-sharp">rocket_launch</span>
+                        </div>
+                        <h3>Smart Task Management</h3>
+                        <p>TaskMatrix revolutionizes your productivity with AI-powered task organization, intelligent scheduling, and seamless course management.</p>
+                        <div class="shine-effect"></div>
+                    </div>
+
+                    <!-- Features Card -->
+                    <div class="info-card">
+                        <div class="card-icon">
+                            <span class="material-icons-sharp">stars</span>
+                        </div>
+                        <h3>Key Features</h3>
+                        <ul class="feature-list">
+                            <li><span class="material-icons-sharp">check_circle</span>Smart Course Tracking</li>
+                            <li><span class="material-icons-sharp">check_circle</span>Interactive Calendar</li>
+                            <li><span class="material-icons-sharp">check_circle</span>Real-time Updates</li>
+                            <li><span class="material-icons-sharp">check_circle</span>Progress Analytics</li>
+                        </ul>
+                        <div class="shine-effect"></div>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3 id="connectWithUsBtn" style="cursor: pointer;">Connect With Us</h3>
+                </div>
+            </div>
+
+            <!-- Contact View (Initially Hidden) -->
+            <div id="contactView" style="display: none;">
+                <button id="backBtn" class="back-button">
+                    <span class="material-icons-sharp">arrow_back</span>
+                    Back
+                </button>
+                
+                <div class="contact-cards">
+                    <a href="https://facebook.com/yourusername" class="contact-card facebook" target="_blank">
+                        <div class="icon-container">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>Facebook</h4>
+                            <p>Follow our updates</p>
+                        </div>
+                        <span class="material-icons-sharp arrow">arrow_forward</span>
+                        <div class="hover-effect"></div>
+                    </a>
+
+                    <a href="https://github.com/yourusername" class="contact-card github" target="_blank">
+                        <div class="icon-container">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>GitHub</h4>
+                            <p>View our code</p>
+                        </div>
+                        <span class="material-icons-sharp arrow">arrow_forward</span>
+                        <div class="hover-effect"></div>
+                    </a>
+
+                    <a href="mailto:your.email@gmail.com" class="contact-card gmail" target="_blank">
+                        <div class="icon-container">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info">
+                            <h4>Email Us</h4>
+                            <p>Get support</p>
+                        </div>
+                        <span class="material-icons-sharp arrow">arrow_forward</span>
+                        <div class="hover-effect"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <style>
+        
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            background: #2563eb;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-icon .material-icons-sharp {
+            color: #ffffff !important;
+            font-size: 24px;
+        }
+
+        [data-theme="dark"] .card-icon .material-icons-sharp {
+            color: #ffffff !important;
+        }
+
+        .info-card:hover .card-icon {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: #4b5563;
+        }
+
+        .feature-list span {
+            color: #2563eb;
+            font-size: 18px;
+        }
+
+        .contact-section {
+            margin-top: 3rem;
+        }
+
+        .contact-section h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+        }
+
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: #ffffff;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .icon-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            z-index: 1;
+        }
+
+        .contact-info {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .contact-info h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .contact-info p {
+            margin: 0.3rem 0 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .arrow {
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .hover-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2563eb;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-card:hover {
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .contact-card:hover .hover-effect {
+            opacity: 1;
+        }
+
+        .contact-card:hover .arrow {
+            opacity: 1;
+            color: white;
+        }
+
+        .contact-card:hover .contact-info p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .shine-effect {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @media screen and (max-width: 768px) {
+            .system-connect {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .contact-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Add these new styles */
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: #2563eb;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+        }
+
+        #defaultView, #contactView {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        .fade-in {
+            opacity: 1 !important;
+        }
+
+        /* Add these dark mode styles */
+        [data-theme="dark"] .system-connect {
+            background: #1a1a1a;
+        }
+
+        [data-theme="dark"] .info-card {
+            background: #242424;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .info-card:hover {
+            background: #2d2d2d;
+        }
+
+        [data-theme="dark"] .info-card h3,
+        [data-theme="dark"] .contact-card h4 {
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .info-card p,
+        [data-theme="dark"] .contact-card p {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .feature-list li {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .feature-list .material-icons-sharp {
+            color: #2563eb;
+        }
+
+        [data-theme="dark"] .contact-card {
+            background: #242424;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="dark"] .contact-card:hover {
+            background: #2d2d2d;
+        }
+
+        [data-theme="dark"] .back-button {
+            background: #242424;
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .back-button:hover {
+            background: #2d2d2d;
+        }
+
+        [data-theme="dark"] .card-icon .material-icons-sharp {
+            color: #2563eb;
+        }
+
+        [data-theme="dark"] .shine-effect {
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+        }
+
+        [data-theme="dark"] .hover-effect {
+            background: radial-gradient(
+                circle at var(--mouse-x, center) var(--mouse-y, center),
+                rgba(124, 138, 255, 0.1) 0%,
+                transparent 60%
+            );
+        }
+
+        /* Dark mode glass effect */
+        [data-theme="dark"] .contact-card::before {
+            background: linear-gradient(
+                120deg,
+                rgba(124, 138, 255, 0.1),
+                rgba(255, 255, 255, 0.05),
+                rgba(124, 138, 255, 0.1)
+            );
+        }
+
+        [data-theme="dark"] .arrow {
+            color: #2563eb;
+        }
+
+        /* Dark mode transitions */
+        .system-connect,
+        .info-card,
+        .contact-card,
+        .back-button,
+        .card-icon,
+        .feature-list li,
+        h3, h4, p {
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode icon container */
+        [data-theme="dark"] .icon-container {
+            background: rgba(124, 138, 255, 0.1);
+        }
+
+        [data-theme="dark"] .icon-container i {
+            color: #2563eb;
+        }
+
+        /* Dark mode connect button */
+        [data-theme="dark"] #connectWithUsBtn {
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] #connectWithUsBtn:hover {
+            color: #2563eb;
+        }
+
+        /* Base light theme styles */
+        body {
+            --background-color: #ffffff;
+            --text-color: #333333;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark theme styles */
+        body[data-theme="dark"] {
+            --background-color: #1a1a1a;
+            --text-color: #ffffff;
+        }
+
+        /* System connect section */
+        .system-connect {
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* Info and contact cards */
+        .info-card, 
+        .contact-card {
+            background: var(--background-color);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Text colors */
+        [data-theme="dark"] .info-card h3,
+        [data-theme="dark"] .contact-card h4,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] .logo-section h2 {
+            color: #ffffff;
+        }
+
+        [data-theme="dark"] .info-card p,
+        [data-theme="dark"] .contact-card p,
+        [data-theme="dark"] .feature-list li {
+            color: #e0e0e0;
+        }
+
+        /* Keep blue accent colors */
+        .primary,
+        [data-theme="dark"] .primary,
+        .card-icon .material-icons-sharp,
+        [data-theme="dark"] .card-icon .material-icons-sharp,
+        .feature-list .material-icons-sharp,
+        [data-theme="dark"] .feature-list .material-icons-sharp {
+            color: #2563eb;
+        }
+
+        /* Dark mode specific styles */
+        [data-theme="dark"] .info-card,
+        [data-theme="dark"] .contact-card {
+            background: #242424;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .contact-card:hover {
+            background: #2d2d2d;
+        }
+        </style>
+        </div>
+    </div>
+
+        </div>
+
+
+    </div>
+
+    <script src="js_main/orders.js"></script>
+    <script src="js_main/index.js"></script>
+    <script src="js_main/speech.js"></script>
+    <script src="js_main/loading.js"></script>
+    <!-- Loading Modal -->
+<div id="spinnerModal" class="spinner-modal">
+    <div class="spinner-content">
+        <div class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h2>Loading...</h2>
+    </div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/help.css">
+    <link rel="stylesheet" href="style/loading.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="icon" type="image/png" href="/TaskMatrixMain/screen/images/tasklogo.png">
+    <title>TaskMatrix</title>
+</head>
+<style>
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            z-index: 1001;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-buttons button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-buttons .cancel {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .modal-buttons .logout {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-buttons button:hover {
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+    </style>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/tasklogo.png">
+                    <h2>Task<span class="primary">Matrix</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="screen1.html">
+                    <span class="material-icons-sharp">
+                        dashboard
+                    </span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="screen2.html">
+                    <span class="material-icons-sharp">
+                        phone_android
+                    </span>
+                    <h3>Android</h3>
+                </a>
+                <a href="screen3.html">
+                    <span class="material-icons-sharp">
+                        subject
+                    </span>
+                    <h3>My Course</h3>
+                </a>
+                <a href="screen4.html">
+                    <span class="material-icons-sharp">
+                        event_available
+                    </span>
+                    <h3>Calendar</h3>
+                </a>
+                <a href="screen5.html">
+                    <span class="material-icons-sharp">
+                        sports_esports
+                    </span>
+                    <h3>Dino Game</h3>
+                    <span class="message-count">27</span>
+                </a>
+                <a href="screen6.html">
+                    <span class="material-icons-sharp">
+                        inventory
+                    </span>
+                    <h3>To do List</h3>
+                </a>
+                <a href="screen7.html">
+                    <span class="material-icons-sharp">
+                        note
+                    </span>
+                    <h3>Speech to Text Converter</h3>
+                </a>
+                <a href="screen8.html"class="active">
+                    <span class="material-icons-sharp">help</span>
+                    <h3>Help</h3>
+                </a>
+                <a href="login/index.html">
+                    <span class="material-icons-sharp">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            <h1>Help Center</h1>
+            <div id="particles-js"></div>
+        
+            <div class="help-container">
+                <!-- Key Features Section -->
+                <section class="help-section">
+                    <h2>Key Features</h2>
+                    <div class="features-grid">
+                        <div class="feature-card" data-modal="settingsModal">
+                            <span class="material-icons-sharp">settings</span>
+                            <h3>Settings</h3>
+                            <p>Customize your TaskMatrix experience</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="courseModal">
+                            <span class="material-icons-sharp">school</span>
+                            <h3>My Course</h3>
+                            <p>Manage your learning journey</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="calendarModal">
+                            <span class="material-icons-sharp">calendar_today</span>
+                            <h3>Calendar</h3>
+                            <p>Schedule and track your activities</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="codeEditorModal">
+                            <span class="material-icons-sharp">code</span>
+                            <h3>Code Editor</h3>
+                            <p>Write and test your code</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="todoModal">
+                            <span class="material-icons-sharp">checklist</span>
+                            <h3>To-Do List</h3>
+                            <p>Organize your tasks efficiently</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="speechModal">
+                            <span class="material-icons-sharp">record_voice_over</span>
+                            <h3>Speech to Text</h3>
+                            <p>Convert speech to text with AI assistance</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="shortcutsModal">
+                            <span class="material-icons-sharp">keyboard</span>
+                            <h3>Keyboard Shortcuts</h3>
+                            <p>Quick access to features</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="tutorialModal">
+                            <span class="material-icons-sharp">school</span>
+                            <h3>Tutorial Guide</h3>
+                            <p>Learn how to use TaskMatrix</p>
+                        </div>
+        
+                        <div class="feature-card" data-modal="customizationModal">
+                            <span class="material-icons-sharp">palette</span>
+                            <h3>Customization</h3>
+                            <p>Personalize your workspace</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        
+            <!-- Modals -->
+            <!-- Settings Modal -->
+            <div id="settingsModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Settings Guide</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Theme Customization</h3>
+                                <p>Change between light and dark modes for comfortable viewing.</p>
+                                <ul>
+                                    <li>Click the theme toggle in the top right</li>
+                                    <li>Choose your preferred color scheme</li>
+                                    <li>Settings are automatically saved</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>Profile Settings</h3>
+                                <p>Manage your personal information and preferences.</p>
+                            </div>
+                            <div class="step">
+                                <h3>Notification Settings</h3>
+                                <p>Control how and when you receive alerts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Course Modal -->
+            <div id="courseModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Course Management</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Accessing Courses</h3>
+                                <p>View and manage your enrolled courses.</p>
+                            </div>
+                            <div class="step">
+                                <h3>Progress Tracking</h3>
+                                <p>Monitor your learning progress and achievements.</p>
+                            </div>
+                            <div class="step">
+                                <h3>Course Materials</h3>
+                                <p>Access lectures, assignments, and resources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Calendar Modal -->
+            <div id="calendarModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Calendar Features</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Event Management</h3>
+                                <p>Create and manage your schedule:</p>
+                                <ul>
+                                    <li>Click any date to add an event</li>
+                                    <li>Set reminders for important deadlines</li>
+                                    <li>Color-code different types of events</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>View Options</h3>
+                                <p>Switch between daily, weekly, and monthly views.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Code Editor Modal -->
+            <div id="codeEditorModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Code Editor Guide</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Supported Languages</h3>
+                                <p>Write and test code in:</p>
+                                <ul>
+                                    <li>HTML - Structure your web content</li>
+                                    <li>CSS - Style your web pages</li>
+                                    <li>JavaScript - Add interactivity</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>Features</h3>
+                                <p>Key editor capabilities:</p>
+                                <ul>
+                                    <li>Syntax highlighting</li>
+                                    <li>Live preview</li>
+                                    <li>Code saving</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Todo Modal -->
+            <div id="todoModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>To-Do List Features</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Task Management</h3>
+                                <p>Organize your tasks effectively:</p>
+                                <ul>
+                                    <li>Create new tasks</li>
+                                    <li>Set priorities and deadlines</li>
+                                    <li>Track completion status</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>Categories</h3>
+                                <p>Group tasks by projects or categories.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Speech to Text Modal -->
+            <div id="speechModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Speech to Text Guide</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Voice Recognition</h3>
+                                <p>Convert speech to text:</p>
+                                <ul>
+                                    <li>Select your microphone</li>
+                                    <li>Click to start recording</li>
+                                    <li>Speak clearly for best results</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>AI Assistant</h3>
+                                <p>Get help with:</p>
+                                <ul>
+                                    <li>Basic calculations</li>
+                                    <li>Simple translations</li>
+                                    <li>Task organization</li>
+                                    <li>General queries</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Shortcuts Modal -->
+            <div id="shortcutsModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Keyboard Shortcuts</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Navigation Shortcuts</h3>
+                                <div class="shortcut-grid">
+                                    <div class="shortcut">
+                                        <kbd>Alt</kbd> + <kbd>D</kbd>
+                                        <span>Go to Dashboard</span>
+                                    </div>
+                                    <div class="shortcut">
+                                        <kbd>Alt</kbd> + <kbd>C</kbd>
+                                        <span>Open Calendar</span>
+                                    </div>
+                                    <div class="shortcut">
+                                        <kbd>Alt</kbd> + <kbd>T</kbd>
+                                        <span>Open Todo List</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <h3>Editor Shortcuts</h3>
+                                <div class="shortcut-grid">
+                                    <div class="shortcut">
+                                        <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                                        <span>Save Code</span>
+                                    </div>
+                                    <div class="shortcut">
+                                        <kbd>Ctrl</kbd> + <kbd>R</kbd>
+                                        <span>Run Code</span>
+                                    </div>
+                                    <div class="shortcut">
+                                        <kbd>F5</kbd>
+                                        <span>Refresh Preview</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <h3>General Shortcuts</h3>
+                                <div class="shortcut-grid">
+                                    <div class="shortcut">
+                                        <kbd>/</kbd>
+                                        <span>Quick Search</span>
+                                    </div>
+                                    <div class="shortcut">
+                                        <kbd>Esc</kbd>
+                                        <span>Close Modal</span>
+                                    </div>
+                                    <div class="shortcut">
+                                        <kbd>?</kbd>
+                                        <span>Show This Help</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Tutorial Modal -->
+            <div id="tutorialModal" class="modal">
+                <div class="modal-content tutorial-content">
+                    <div class="modal-header">
+                        <h2>Getting Started</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="tutorial-steps">
+                            <div class="tutorial-nav">
+                                <button class="prev-step" disabled>&larr; Previous</button>
+                                <span class="step-counter">Step 1 of 5</span>
+                                <button class="next-step">Next &rarr;</button>
+                            </div>
+                            <div class="tutorial-content">
+                                <div class="tutorial-step active" data-step="1">
+                                    <h3>Welcome to TaskMatrix</h3>
+                                    <img src="images/dashboard.png" alt="Dashboard Overview">
+                                    <p>TaskMatrix helps you organize your work and boost productivity.</p>
+                                </div>
+                                <div class="tutorial-step" data-step="2">
+                                    <h3>Dashboard Overview</h3>
+                                    <p>Monitor your progress and manage tasks from one place.</p>
+                                    <ul>
+                                        <li>View task statistics</li>
+                                        <li>Check recent activities</li>
+                                        <li>Access quick actions</li>
+                                    </ul>
+                                </div>
+                                <div class="tutorial-step" data-step="3">
+                                    <h3>Task Management</h3>
+                                    <img src="images/course.png" alt="Task Management">
+                                    <p>Efficiently manage your tasks and projects:</p>
+                                    <ul>
+                                        <li>Create and organize tasks</li>
+                                        <li>Set priorities and deadlines</li>
+                                        <li>Track progress with visual indicators</li>
+                                        <li>Receive reminders for important deadlines</li>
+                                    </ul>
+                                </div>
+                                <div class="tutorial-step" data-step="4">
+                                    <h3>Code Editor & AI Assistant</h3>
+                                    <img src="images/ais.png" alt="Code Editor">
+                                    <p>Boost your productivity with advanced tools:</p>
+                                    <ul>
+                                        <li>Write and test code in multiple languages</li>
+                                        <li>Get AI-powered suggestions and help</li>
+                                        <li>Convert speech to text effortlessly</li>
+                                        <li>Access keyboard shortcuts for quick actions</li>
+                                    </ul>
+                                </div>
+                                <div class="tutorial-step" data-step="5">
+                                    <h3>Customization & Settings</h3>
+                                    <img src="images/switch.png" alt="Settings">
+                                    <p>Make TaskMatrix your own:</p>
+                                    <ul>
+                                        <li>Choose between light and dark themes</li>
+                                        <li>Customize your workspace layout</li>
+                                        <li>Set notification preferences</li>
+                                        <li>Configure keyboard shortcuts</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Customization Modal -->
+            <div id="customizationModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Customization Options</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <div class="help-steps">
+                            <div class="step">
+                                <h3>Theme Settings</h3>
+                                <p>Personalize your visual experience:</p>
+                                <ul>
+                                    <li>Switch between light and dark modes</li>
+                                    <li>Customize accent colors</li>
+                                    <li>Adjust font sizes and styles</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>Layout Options</h3>
+                                <p>Configure your workspace:</p>
+                                <ul>
+                                    <li>Rearrange dashboard widgets</li>
+                                    <li>Show/hide sidebar elements</li>
+                                    <li>Customize card appearances</li>
+                                </ul>
+                            </div>
+                            <div class="step">
+                                <h3>Accessibility Features</h3>
+                                <p>Make TaskMatrix work for you:</p>
+                                <ul>
+                                    <li>High contrast mode</li>
+                                    <li>Screen reader support</li>
+                                    <li>Keyboard navigation options</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- End of Main Content -->
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">
+                        menu
+                    </span>
+                </button>
+                <div class="dark-mode">
+                    <span class="material-icons-sharp active">
+                        light_mode
+                    </span>
+                    <span class="material-icons-sharp">
+                        dark_mode
+                    </span>
+                </div>
+
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Arlou</b></p>
+                        <small class="text-muted">User</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="images/default.png">
+                    </div>
+                </div>
+
+            </div>
+            <!-- End of Nav -->
+
+           
+            <div class="system-connect"></div>
+                <div class="header">
+                    <div class="logo-section">
+                        
+                    </div>
+                </div>
+
+                <!-- Default View -->
+                <div id="defaultView">
+                    <div class="info-cards">
+                        <!-- System Overview Card -->
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <span class="material-icons-sharp">rocket_launch</span>
+                            </div>
+                            <h3>Smart Task Management</h3>
+                            <p>TaskMatrix revolutionizes your productivity with AI-powered task organization, intelligent scheduling, and seamless course management.</p>
+                            <div class="shine-effect"></div>
+                        </div>
+
+                        <!-- Features Card -->
+                        <div class="info-card">
+                            <div class="card-icon">
+                                <span class="material-icons-sharp">stars</span>
+                            </div>
+                            <h3>Key Features</h3>
+                            <ul class="feature-list">
+                                <li><span class="material-icons-sharp">check_circle</span>Smart Course Tracking</li>
+                                <li><span class="material-icons-sharp">check_circle</span>Interactive Calendar</li>
+                                <li><span class="material-icons-sharp">check_circle</span>Real-time Updates</li>
+                                <li><span class="material-icons-sharp">check_circle</span>Progress Analytics</li>
+                            </ul>
+                            <div class="shine-effect"></div>
+                        </div>
+                    </div>
+
+                    <div class="contact-section">
+                        <h3 id="connectWithUsBtn" style="cursor: pointer;">Connect With Us</h3>
+                    </div>
+                </div>
+
+                <!-- Contact View (Initially Hidden) -->
+                <div id="contactView" style="display: none;">
+                    <button id="backBtn" class="back-button">
+                        <span class="material-icons-sharp">arrow_back</span>
+                        Back
+                    </button>
+                    
+                    <div class="contact-cards">
+                        <a href="https://facebook.com/yourusername" class="contact-card facebook" target="_blank">
+                            <div class="icon-container">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h4>Facebook</h4>
+                                <p>Follow our updates</p>
+                            </div>
+                            <span class="material-icons-sharp arrow">arrow_forward</span>
+                            <div class="hover-effect"></div>
+                        </a>
+
+                        <a href="https://github.com/yourusername" class="contact-card github" target="_blank">
+                            <div class="icon-container">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h4>GitHub</h4>
+                                <p>View our code</p>
+                            </div>
+                            <span class="material-icons-sharp arrow">arrow_forward</span>
+                            <div class="hover-effect"></div>
+                        </a>
+
+                        <a href="mailto:your.email@gmail.com" class="contact-card gmail" target="_blank">
+                            <div class="icon-container">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-info">
+                                <h4>Email Us</h4>
+                                <p>Get support</p>
+                            </div>
+                            <span class="material-icons-sharp arrow">arrow_forward</span>
+                            <div class="hover-effect"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+            
+
+            .header {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+
+            .logo-section {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .info-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 2rem;
+                margin: 2rem 0;
+            }
+
+            .info-card {
+                background: #ffffff;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                position: relative;
+                overflow: hidden;
+                transition: transform 0.3s ease;
+            }
+
+            .info-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .card-icon {
+                background: #2563eb;
+                width: 50px;
+                height: 50px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 1.5rem;
+                transition: all 0.3s ease;
+            }
+
+            .card-icon .material-icons-sharp {
+                color: #ffffff !important;
+                font-size: 24px;
+            }
+
+            [data-theme="dark"] .card-icon .material-icons-sharp {
+                color: #ffffff !important;
+            }
+
+            .info-card:hover .card-icon {
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
+            }
+
+            .feature-list {
+                list-style: none;
+                padding: 0;
+                margin-top: 1rem;
+            }
+
+            .feature-list li {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-bottom: 0.8rem;
+                color: #4b5563;
+            }
+
+            .feature-list span {
+                color: #2563eb;
+                font-size: 18px;
+            }
+
+            .contact-section {
+                margin-top: 3rem;
+            }
+
+            .contact-section h3 {
+                text-align: center;
+                margin-bottom: 2rem;
+                color: #1a1a1a;
+            }
+
+            .contact-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .contact-card {
+                display: flex;
+                align-items: center;
+                padding: 1.5rem;
+                background: #ffffff;
+                border-radius: 12px;
+                text-decoration: none;
+                color: #1a1a1a;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                transition: all 0.3s ease;
+            }
+
+            .icon-container {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 1rem;
+                z-index: 1;
+            }
+
+            .contact-info {
+                flex: 1;
+                z-index: 1;
+            }
+
+            .contact-info h4 {
+                margin: 0;
+                font-size: 1.1rem;
+            }
+
+            .contact-info p {
+                margin: 0.3rem 0 0;
+                font-size: 0.9rem;
+                color: #666;
+            }
+
+            .arrow {
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1;
+            }
+
+            .hover-effect {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #2563eb;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .contact-card:hover {
+                color: white;
+                transform: translateY(-3px);
+            }
+
+            .contact-card:hover .hover-effect {
+                opacity: 1;
+            }
+
+            .contact-card:hover .arrow {
+                opacity: 1;
+                color: white;
+            }
+
+            .contact-card:hover .contact-info p {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .shine-effect {
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 50%;
+                height: 100%;
+                background: linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0) 100%
+                );
+                transform: skewX(-25deg);
+                animation: shine 3s infinite;
+            }
+
+            @keyframes shine {
+                0% { left: -100%; }
+                20% { left: 100%; }
+                100% { left: 100%; }
+            }
+
+            @media screen and (max-width: 768px) {
+                .system-connect {
+                    padding: 1.5rem;
+                    margin: 1rem;
+                }
+
+                .contact-cards {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Add these new styles */
+            .back-button {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: none;
+                border: none;
+                color: #2563eb;
+                cursor: pointer;
+                padding: 0.5rem;
+                margin-bottom: 1rem;
+                font-size: 1rem;
+                transition: transform 0.3s ease;
+            }
+
+            .back-button:hover {
+                transform: translateX(-5px);
+            }
+
+            #defaultView, #contactView {
+                opacity: 1;
+                transition: opacity 0.3s ease;
+            }
+
+            .fade-out {
+                opacity: 0 !important;
+            }
+
+            .fade-in {
+                opacity: 1 !important;
+            }
+
+            /* Add these dark mode styles */
+            [data-theme="dark"] .system-connect {
+                background: #1a1a1a;
+            }
+
+            [data-theme="dark"] .info-card {
+                background: #242424;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            [data-theme="dark"] .info-card:hover {
+                background: #2d2d2d;
+            }
+
+            [data-theme="dark"] .info-card h3,
+            [data-theme="dark"] .contact-card h4 {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .info-card p,
+            [data-theme="dark"] .contact-card p {
+                color: #e0e0e0;
+            }
+
+            [data-theme="dark"] .feature-list li {
+                color: #e0e0e0;
+            }
+
+            [data-theme="dark"] .feature-list .material-icons-sharp {
+                color: #2563eb;
+            }
+
+            [data-theme="dark"] .contact-card {
+                background: #242424;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            [data-theme="dark"] .contact-card:hover {
+                background: #2d2d2d;
+            }
+
+            [data-theme="dark"] .back-button {
+                background: #242424;
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .back-button:hover {
+                background: #2d2d2d;
+            }
+
+            [data-theme="dark"] .card-icon .material-icons-sharp {
+                color: #2563eb;
+            }
+
+            [data-theme="dark"] .shine-effect {
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent
+                );
+            }
+
+            [data-theme="dark"] .hover-effect {
+                background: radial-gradient(
+                    circle at var(--mouse-x, center) var(--mouse-y, center),
+                    rgba(124, 138, 255, 0.1) 0%,
+                    transparent 60%
+                );
+            }
+
+            /* Dark mode glass effect */
+            [data-theme="dark"] .contact-card::before {
+                background: linear-gradient(
+                    120deg,
+                    rgba(124, 138, 255, 0.1),
+                    rgba(255, 255, 255, 0.05),
+                    rgba(124, 138, 255, 0.1)
+                );
+            }
+
+            [data-theme="dark"] .arrow {
+                color: #2563eb;
+            }
+
+            /* Dark mode transitions */
+            .system-connect,
+            .info-card,
+            .contact-card,
+            .back-button,
+            .card-icon,
+            .feature-list li,
+            h3, h4, p {
+                transition: all 0.3s ease;
+            }
+
+            /* Dark mode icon container */
+            [data-theme="dark"] .icon-container {
+                background: rgba(124, 138, 255, 0.1);
+            }
+
+            [data-theme="dark"] .icon-container i {
+                color: #2563eb;
+            }
+
+            /* Dark mode connect button */
+            [data-theme="dark"] #connectWithUsBtn {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] #connectWithUsBtn:hover {
+                color: #2563eb;
+            }
+
+            /* Base light theme styles */
+            body {
+                --background-color: #ffffff;
+                --text-color: #333333;
+                transition: all 0.3s ease;
+            }
+
+            /* Dark theme styles */
+            body[data-theme="dark"] {
+                --background-color: #1a1a1a;
+                --text-color: #ffffff;
+            }
+
+            /* System connect section */
+            .system-connect {
+                background: var(--background-color);
+                color: var(--text-color);
+            }
+
+            /* Info and contact cards */
+            .info-card, 
+            .contact-card {
+                background: var(--background-color);
+                color: var(--text-color);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Text colors */
+            [data-theme="dark"] .info-card h3,
+            [data-theme="dark"] .contact-card h4,
+            [data-theme="dark"] h2,
+            [data-theme="dark"] .logo-section h2 {
+                color: #ffffff;
+            }
+
+            [data-theme="dark"] .info-card p,
+            [data-theme="dark"] .contact-card p,
+            [data-theme="dark"] .feature-list li {
+                color: #e0e0e0;
+            }
+
+            /* Keep blue accent colors */
+            .primary,
+            [data-theme="dark"] .primary,
+            .card-icon .material-icons-sharp,
+            [data-theme="dark"] .card-icon .material-icons-sharp,
+            .feature-list .material-icons-sharp,
+            [data-theme="dark"] .feature-list .material-icons-sharp {
+                color: #2563eb;
+            }
+
+            /* Dark mode specific styles */
+            [data-theme="dark"] .info-card,
+            [data-theme="dark"] .contact-card {
+                background: #242424;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+
+            [data-theme="dark"] .contact-card:hover {
+                background: #2d2d2d;
+            }
+            </style>
+
+        </div>
+
+
+    </div>
+
+    <script src="js_main/orders.js"></script>
+    <script src="js_main/index.js"></script>
+    <script src="js_main/help.js"></script>
+    <script src="js_main/loading.js"></script>
+    <!-- Loading Modal -->
+<div id="spinnerModal" class="spinner-modal">
+    <div class="spinner-content">
+        <div class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <h2>Loading...</h2>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const connectBtn = document.getElementById('connectWithUsBtn');
+        const backBtn = document.getElementById('backBtn');
+        const defaultView = document.getElementById('defaultView');
+        const contactView = document.getElementById('contactView');
+
+        connectBtn.addEventListener('click', function() {
+            defaultView.classList.add('fade-out');
+            setTimeout(() => {
+                defaultView.style.display = 'none';
+                contactView.style.display = 'block';
+                setTimeout(() => {
+                    contactView.classList.add('fade-in');
+                }, 50);
+            }, 300);
+        });
+
+        backBtn.addEventListener('click', function() {
+            contactView.classList.remove('fade-in');
+            setTimeout(() => {
+                contactView.style.display = 'none';
+                defaultView.style.display = 'block';
+                setTimeout(() => {
+                    defaultView.classList.remove('fade-out');
+                }, 50);
+            }, 300);
+        });
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeIcon = document.querySelector('.dark-mode');
+        
+        darkModeIcon.addEventListener('click', function() {
+            // Toggle the material-icons-sharp-active class
+            this.classList.toggle('material-icons-sharp-active');
+            
+            // Toggle dark theme
+            if (this.classList.contains('material-icons-sharp-active')) {
+                document.body.setAttribute('data-theme', 'dark');
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>
